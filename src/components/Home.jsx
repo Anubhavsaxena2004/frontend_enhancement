@@ -71,12 +71,16 @@ const fadeInUpOnce = {
   }
 };
 
-// Reusable BentoCard Component with Cursor Mouse Spotlight & Alternating Left/Right Slide-In
+// Reusable BentoCard Component — mobile-safe (no hover on touch, no h-full height glitch)
 function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag, colSpan = '', index = 0 }) {
+  // Only enable mouse spotlight on non-touch devices
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
+  // Detect touch device on first interaction — avoid mouse effects on mobile
   const handleMouseMove = (e) => {
+    if (isTouch) return;
     const rect = e.currentTarget.getBoundingClientRect();
     setMousePos({
       x: e.clientX - rect.left,
@@ -84,35 +88,38 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
     });
   };
 
-  const isEven = index % 2 === 0;
+  const handleTouchStart = () => setIsTouch(true);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.45, ease: [0.21, 0.47, 0.32, 0.98], delay: (index % 3) * 0.08 }}
-      whileHover={{ y: -3 }}
+      // whileHover only on non-touch — avoids tap-triggered layout shift on mobile
+      whileHover={!isTouch ? { y: -3 } : {}}
+      onTouchStart={handleTouchStart}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => !isTouch && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white/90 dark:bg-white/5 p-8 hover:border-slate-300 dark:hover:border-white/20 transition-colors duration-300 group ${colSpan} ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white/90 dark:bg-white/5 p-6 sm:p-8 hover:border-slate-300 dark:hover:border-white/20 transition-colors duration-300 group ${colSpan} ${className}`}
     >
-      {/* Soft Radial Cursor Spotlight */}
-      {isHovered && (
+      {/* Soft Radial Cursor Spotlight — desktop only */}
+      {isHovered && !isTouch && (
         <div
-          className="pointer-events-none absolute -inset-px transition-opacity duration-300"
+          className="pointer-events-none absolute -inset-px"
           style={{
-            background: `radial-gradient(550px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99, 102, 241, 0.12), transparent 45%)`,
+            background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99, 102, 241, 0.1), transparent 50%)`,
           }}
         />
       )}
 
-      <div className="relative z-10 flex flex-col justify-between h-full space-y-6">
+      {/* Removed h-full — caused height glitch on mobile single-column layout */}
+      <div className="relative z-10 flex flex-col justify-between space-y-5">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-              <Icon className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+              <Icon className="w-5 h-5" />
             </div>
             {tag && (
               <span className="text-[10px] font-extrabold px-3 py-1 rounded-full bg-slate-100 dark:bg-navy-900 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 uppercase tracking-wider">
@@ -122,7 +129,7 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
           </div>
 
           <div>
-            <h4 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white transition-colors">
+            <h4 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white transition-colors">
               {title}
             </h4>
             <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mt-2">
@@ -396,30 +403,28 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
 
           {/* IMPACT STATS WITH NUMBER COUNT-UP */}
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto"
           >
             {[
               { label: 'Interns Trained & Placed', numeric: '15000', suffix: '+', icon: Users },
               { label: 'PPO Placement Rate', numeric: '98.4', decimals: 1, suffix: '%', icon: TrendingUp },
               { label: 'IT Projects Delivered', numeric: '450', suffix: '+', icon: Code2 },
-              { label: 'Highest Package Offered', numeric: '22.5', decimals: 1, prefix: '₹', suffix: ' LPA', icon: Award },
+              { label: 'Highest Package', numeric: '22.5', decimals: 1, prefix: '₹', suffix: ' LPA', icon: Award },
             ].map((stat, idx) => {
               const Icon = stat.icon;
               return (
-                <motion.div 
-                  key={idx} 
-                  whileHover={{ y: -3 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                  className="p-5 rounded-2xl text-center bg-white/90 dark:bg-navy-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm"
+                <div 
+                  key={idx}
+                  className="p-4 rounded-2xl text-center bg-white/90 dark:bg-navy-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm min-w-0"
                 >
                   <div className="flex justify-center mb-2">
-                    <Icon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                    <Icon className="w-4 h-4 text-slate-700 dark:text-slate-300" />
                   </div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+                  <div className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-none">
                     <Counter
                       value={stat.numeric}
                       decimals={stat.decimals || 0}
@@ -427,10 +432,10 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
                       suffix={stat.suffix || ''}
                     />
                   </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-1.5 leading-tight">
                     {stat.label}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </motion.div>
@@ -489,8 +494,8 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </h3>
         </div>
 
-        {/* Domain Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+        {/* Domain Buttons — scrollable row on mobile to prevent wrapping/overflow */}
+        <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-1 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center sm:gap-3">
           {domains.map((domain, idx) => {
             const Icon = domain.icon;
             const isSelected = activeDomainIndex === idx;
@@ -498,14 +503,14 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               <button
                 key={idx}
                 onClick={() => setActiveDomainIndex(idx)}
-                className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-2.5 ${
+                className={`flex-shrink-0 px-4 py-2.5 rounded-2xl text-xs font-bold transition-colors flex items-center gap-2 ${
                   isSelected
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md scale-105'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md'
                     : 'bg-white dark:bg-navy-900/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-800 border border-slate-200 dark:border-white/10'
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                <span>{domain.title}</span>
+                <Icon className="w-3.5 h-3.5 shrink-0" />
+                <span className="whitespace-nowrap">{domain.title}</span>
               </button>
             );
           })}
@@ -514,43 +519,44 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         {/* Active Domain Card */}
         <motion.div 
           key={activeDomainIndex}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="p-8 rounded-3xl relative overflow-hidden border border-slate-200 dark:border-white/10 bg-white/90 dark:bg-navy-900/80 shadow-sm"
+          transition={{ duration: 0.25 }}
+          className="p-5 sm:p-8 rounded-3xl relative overflow-hidden border border-slate-200 dark:border-white/10 bg-white/90 dark:bg-navy-900/80 shadow-sm"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>Industry Trend: {domains[activeDomainIndex].growth}</span>
               </div>
-              <h4 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+              <h4 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
                 {domains[activeDomainIndex].title} Track
               </h4>
               <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                 Work directly on live client deliverables under 1-on-1 engineering mentors. Gain production experience with modern tech stacks and automated CI/CD pipelines.
               </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
+              {/* Stats — 3 cols on sm+, 2 cols on mobile for better readability */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1">
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Stipend Range</span>
                   <span className="text-sm font-bold text-slate-900 dark:text-white">{domains[activeDomainIndex].stipend}</span>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Duration</span>
-                  <span className="text-sm font-bold text-slate-800 dark:text-slate-200">3 - 6 Months</span>
+                  <span className="text-sm font-bold text-slate-800 dark:text-slate-200">3–6 Months</span>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 col-span-2 sm:col-span-1">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Perks Included</span>
                   <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">Offer Letter + LOR</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 text-center bg-slate-50 dark:bg-navy-900/90">
-              <div className="w-12 h-12 mx-auto rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center">
-                <Award className="w-6 h-6" />
+            <div className="p-5 rounded-2xl border border-slate-200 dark:border-white/10 space-y-3 text-center bg-slate-50 dark:bg-navy-900/90">
+              <div className="w-10 h-10 mx-auto rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center">
+                <Award className="w-5 h-5" />
               </div>
               <h5 className="text-slate-900 dark:text-white font-bold text-base">Ready to start?</h5>
               <p className="text-xs text-slate-500 dark:text-slate-400">
