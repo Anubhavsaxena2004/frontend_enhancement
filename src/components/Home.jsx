@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './ui/Button';
+import Counter from './ui/Counter';
 import Marquee from './ui/Marquee';
 import { 
   Sparkles, 
@@ -30,7 +31,7 @@ import {
 } from 'lucide-react';
 import { MOCK_INTERNSHIPS, MOCK_TESTIMONIALS, MOCK_SERVICES } from '../data/mockData';
 
-// Headline Stagger Variant
+// Headline Stagger Variant (viewport once: true)
 const headlineText = "Launch Your IT Career with Navyan.";
 
 const sentenceContainer = {
@@ -66,28 +67,8 @@ const fadeInUpOnce = {
   }
 };
 
-const bentoGridStagger = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1
-    }
-  }
-};
-
-const bentoCardVariant = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.5, ease: 'easeOut' } 
-  }
-};
-
-// Reusable BentoCard Component
-function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag, colSpan = '' }) {
+// Reusable BentoCard Component with Cursor Mouse Spotlight & Alternating Left/Right Slide-In
+function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag, colSpan = '', index = 0 }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
@@ -99,21 +80,27 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
     });
   };
 
+  // Alternating Left / Right Slide-In Animation based on Index
+  const isEven = index % 2 === 0;
+
   return (
     <motion.div
-      variants={bentoCardVariant}
+      initial={{ opacity: 0, x: isEven ? -60 : 60 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ type: 'spring', stiffness: 70, damping: 18, delay: (index % 3) * 0.1 }}
       whileHover={{ y: -4 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/5 backdrop-blur-xl p-8 hover:border-primary/40 transition-colors duration-300 group ${colSpan} ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur-xl p-8 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-300 group ${colSpan} ${className}`}
     >
+      {/* Soft Radial Cursor Spotlight */}
       {isHovered && (
         <div
           className="pointer-events-none absolute -inset-px transition-opacity duration-300"
           style={{
-            background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99, 102, 241, 0.15), transparent 40%)`,
+            background: `radial-gradient(550px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99, 102, 241, 0.12), transparent 45%)`,
           }}
         />
       )}
@@ -121,20 +108,18 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
       <div className="relative z-10 flex flex-col justify-between h-full space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-indigo to-brand-blue p-0.5 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-white dark:bg-navy-950 rounded-[14px] flex items-center justify-center text-slate-900 dark:text-white">
-                <Icon className="w-7 h-7 text-brand-indigo dark:text-brand-cyan" />
-              </div>
+            <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+              <Icon className="w-6 h-6" />
             </div>
             {tag && (
-              <span className="text-[10px] font-extrabold px-3 py-1 rounded-full bg-brand-indigo/10 dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-cyan border border-brand-indigo/30 uppercase tracking-wider">
+              <span className="text-[10px] font-extrabold px-3 py-1 rounded-full bg-slate-100 dark:bg-navy-900 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 uppercase tracking-wider">
                 {tag}
               </span>
             )}
           </div>
 
           <div>
-            <h4 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-brand-indigo dark:group-hover:text-brand-cyan transition-colors">
+            <h4 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white transition-colors">
               {title}
             </h4>
             <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mt-2">
@@ -162,15 +147,15 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
   ];
 
   const technologies = [
-    { name: 'React 18', type: 'Frontend Framework', color: 'text-cyan-400', icon: Code2 },
-    { name: 'Node.js', type: 'Backend Runtime', color: 'text-emerald-400', icon: Server },
-    { name: 'Python', type: 'AI & Machine Learning', color: 'text-amber-400', icon: Cpu },
-    { name: 'AWS Cloud', type: 'DevOps & Infra', color: 'text-amber-500', icon: Cloud },
-    { name: 'Figma', type: 'UI/UX Design', color: 'text-pink-400', icon: Sparkles },
-    { name: 'TypeScript', type: 'Typed JavaScript', color: 'text-blue-400', icon: Code },
-    { name: 'Docker', type: 'Containerization', color: 'text-cyan-500', icon: Layers },
-    { name: 'PyTorch', type: 'Deep Learning', color: 'text-red-400', icon: Flame },
-    { name: 'MongoDB', type: 'NoSQL Database', color: 'text-emerald-500', icon: Database },
+    { name: 'React 18', type: 'Frontend Framework', color: 'text-cyan-600 dark:text-cyan-400', icon: Code2 },
+    { name: 'Node.js', type: 'Backend Runtime', color: 'text-emerald-600 dark:text-emerald-400', icon: Server },
+    { name: 'Python', type: 'AI & Machine Learning', color: 'text-amber-600 dark:text-amber-400', icon: Cpu },
+    { name: 'AWS Cloud', type: 'DevOps & Infra', color: 'text-amber-600 dark:text-amber-500', icon: Cloud },
+    { name: 'Figma', type: 'UI/UX Design', color: 'text-pink-600 dark:text-pink-400', icon: Sparkles },
+    { name: 'TypeScript', type: 'Typed JavaScript', color: 'text-blue-600 dark:text-blue-400', icon: Code },
+    { name: 'Docker', type: 'Containerization', color: 'text-cyan-600 dark:text-cyan-500', icon: Layers },
+    { name: 'PyTorch', type: 'Deep Learning', color: 'text-red-600 dark:text-red-400', icon: Flame },
+    { name: 'MongoDB', type: 'NoSQL Database', color: 'text-emerald-600 dark:text-emerald-500', icon: Database },
   ];
 
   const handleQuickVerify = (e) => {
@@ -180,27 +165,20 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
   };
 
   return (
-    <div className="space-y-24 pb-20 overflow-x-hidden bg-white dark:bg-navy-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div className="space-y-24 pb-20 overflow-x-hidden bg-slate-50 dark:bg-navy-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       
       {/* HERO SECTION */}
-      <section className="relative min-h-[90vh] pt-32 pb-20 flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden">
         
-        {/* Background SVG Blob with Soft Opacity and Mix-Blend-Mode */}
+        {/* Background SVG Blob with Soft Opacity */}
         <img
           src="/blob.svg"
-          alt="Background Blob Visual"
-          className="absolute -top-10 left-1/2 -translate-x-1/2 w-full max-w-5xl opacity-30 dark:opacity-40 mix-blend-screen pointer-events-none -z-10 blur-3xl"
+          alt="Background Visual"
+          className="absolute -top-10 left-1/2 -translate-x-1/2 w-full max-w-5xl opacity-20 dark:opacity-30 mix-blend-screen pointer-events-none -z-10 blur-3xl"
         />
 
-        {/* Haikei Blurry Gradient Secondary Background */}
-        <img
-          src="/blurry-gradient.svg"
-          alt="Blurry Gradient Glow"
-          className="absolute -top-20 left-1/2 -translate-x-1/2 w-full max-w-4xl opacity-25 dark:opacity-35 mix-blend-plus-lighter pointer-events-none -z-20 blur-3xl"
-        />
-
-        {/* Subtle Radial Grid Mask Overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(#6366f1_1px,transparent_1px)] dark:bg-[radial-gradient(#2563eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none -z-10" />
+        {/* Subtle Radial Grid Mask */}
+        <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           
@@ -210,12 +188,12 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-navy-900/90 border border-indigo-200 dark:border-brand-indigo/40 text-xs font-semibold text-brand-indigo dark:text-brand-cyan shadow-sm dark:shadow-glow-indigo mb-8 animate-float"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-navy-900/90 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm mb-8"
           >
-            <span className="flex h-2 w-2 rounded-full bg-brand-indigo dark:bg-brand-cyan animate-ping" />
-            <Sparkles className="w-3.5 h-3.5 text-brand-indigo dark:text-brand-cyan" />
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+            <Sparkles className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
             <span>Navyan Batch 2026 Internships Now Open • Guaranteed Stipends</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
           </motion.div>
 
           {/* Staggered Text-Reveal Animation for Headline */}
@@ -230,7 +208,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               <motion.span
                 key={i}
                 variants={wordVariant}
-                className={word.includes("Navyan") || word.includes("IT") ? "gradient-text-primary" : ""}
+                className={word.includes("Navyan") || word.includes("IT") ? "text-slate-900 dark:text-white font-extrabold" : ""}
               >
                 {word}
               </motion.span>
@@ -249,7 +227,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             Accelerate your career through hands-on industry internships with guaranteed stipends, production mentorship, and enterprise IT engineering solutions.
           </motion.p>
 
-          {/* Buttons using Reusable <Button> Component */}
+          {/* Humanized Buttons (Slate/White Token & Glassmorphism Outline) */}
           <motion.div 
             variants={fadeInUpOnce}
             initial="hidden"
@@ -258,7 +236,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             transition={{ delay: 0.4 }}
             className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            {/* Primary Button with Magnetic Scale-Up Hover */}
             <Button
               variant="primary"
               size="lg"
@@ -269,9 +246,8 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               Explore Internships
             </Button>
 
-            {/* Secondary Ghost Button */}
             <Button
-              variant="ghost"
+              variant="secondary"
               size="lg"
               icon={Code2}
               onClick={() => setActiveTab('services')}
@@ -287,10 +263,10 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             whileInView="visible"
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
-            className="mt-12 max-w-xl mx-auto p-2.5 rounded-2xl bg-white/80 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 backdrop-blur-xl shadow-glass-card flex items-center gap-2"
+            className="mt-12 max-w-xl mx-auto p-2.5 rounded-2xl bg-white/90 dark:bg-navy-900/90 border border-slate-200 dark:border-white/10 backdrop-blur-xl shadow-sm flex items-center gap-2"
           >
             <div className="pl-3 flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs shrink-0">
-              <ShieldCheck className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span className="hidden sm:inline">Verify Credential:</span>
             </div>
             <input
@@ -298,17 +274,19 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               placeholder="Enter Certificate / Offer Letter ID (e.g. NAV-2026-8941)"
               value={quickVerifyInput}
               onChange={(e) => setQuickVerifyInput(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-navy-950/80 px-3 py-2 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 border border-slate-200 dark:border-white/5 focus:outline-none focus:border-brand-indigo"
+              className="w-full bg-slate-50 dark:bg-navy-950/80 px-3 py-2 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 border border-slate-200 dark:border-white/10 focus:outline-none focus:border-slate-400"
             />
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={handleQuickVerify}
-              className="px-4 py-2 rounded-xl bg-brand-indigo hover:bg-brand-indigo/90 text-white text-xs font-bold shrink-0 transition-colors"
+              className="shrink-0"
             >
               Verify
-            </button>
+            </Button>
           </motion.div>
 
-          {/* Dynamic Platform Metric Counters */}
+          {/* INCREASING NUMBER COUNT-UP ANIMATION IN IMPACT STATS */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -317,24 +295,29 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
           >
             {[
-              { label: 'Interns Trained & Placed', value: '15,000+', icon: Users, color: 'text-brand-indigo dark:text-brand-cyan' },
-              { label: 'PPO Placement Rate', value: '98.4%', icon: TrendingUp, color: 'text-emerald-600 dark:text-emerald-400' },
-              { label: 'IT Projects Delivered', value: '450+', icon: Code2, color: 'text-brand-indigo' },
-              { label: 'Highest Package Offered', value: '₹22.5 LPA', icon: Award, color: 'text-amber-500 dark:text-amber-400' },
+              { label: 'Interns Trained & Placed', numeric: '15000', suffix: '+', icon: Users },
+              { label: 'PPO Placement Rate', numeric: '98.4', decimals: 1, suffix: '%', icon: TrendingUp },
+              { label: 'IT Projects Delivered', numeric: '450', suffix: '+', icon: Code2 },
+              { label: 'Highest Package Offered', numeric: '22.5', decimals: 1, prefix: '₹', suffix: ' LPA', icon: Award },
             ].map((stat, idx) => {
               const Icon = stat.icon;
               return (
                 <motion.div 
                   key={idx} 
-                  whileHover={{ y: -4 }}
+                  whileHover={{ y: -3 }}
                   transition={{ type: 'spring', stiffness: 300 }}
-                  className="glass-panel p-5 rounded-2xl text-center bg-slate-50/80 dark:bg-navy-900/60 border border-slate-200 dark:border-white/10"
+                  className="p-5 rounded-2xl text-center bg-white/90 dark:bg-navy-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm"
                 >
                   <div className="flex justify-center mb-2">
-                    <Icon className={`w-5 h-5 ${stat.color}`} />
+                    <Icon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
                   </div>
-                  <div className={`text-2xl sm:text-3xl font-extrabold ${stat.color}`}>
-                    {stat.value}
+                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+                    <Counter
+                      value={stat.numeric}
+                      decimals={stat.decimals || 0}
+                      prefix={stat.prefix || ''}
+                      suffix={stat.suffix || ''}
+                    />
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
                     {stat.label}
@@ -347,11 +330,11 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* INFINITE SMOOTH-SCROLLING MARQUEE SECTION WITH GRADIENT EDGE MASKS */}
-      <section className="border-y border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-navy-950/60 py-10 overflow-hidden space-y-6">
+      {/* INFINITE MARQUEE TECH STACK SECTION */}
+      <section className="border-y border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-navy-950/60 py-10 overflow-hidden space-y-6">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-xs font-bold text-brand-indigo dark:text-brand-cyan uppercase tracking-widest">
-            Technologies We Teach & Build With
+          <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+            Technologies We Teach & Enterprise Tech Partners
           </p>
         </div>
 
@@ -361,9 +344,9 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             return (
               <div 
                 key={idx} 
-                className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-white dark:bg-navy-900/90 border border-slate-200 dark:border-white/10 shadow-sm hover:border-brand-indigo/50 transition-colors"
+                className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-slate-50 dark:bg-navy-900/90 border border-slate-200/80 dark:border-white/10 shadow-sm"
               >
-                <div className={`w-8 h-8 rounded-xl bg-slate-100 dark:bg-navy-950 flex items-center justify-center ${tech.color}`}>
+                <div className={`w-8 h-8 rounded-xl bg-white dark:bg-navy-950 flex items-center justify-center ${tech.color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
                 <div className="text-left">
@@ -374,31 +357,20 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             );
           })}
         </Marquee>
-
-        <Marquee speed="35s" reverse={true} pauseOnHover={true}>
-          {['GOOGLE', 'MICROSOFT', 'AMAZON', 'FLIPKART', 'RAZORPAY', 'SWIGGY', 'TCS', 'INFOSYS', 'CRED', 'PAYTM'].map((brand, i) => (
-            <div key={i} className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-100 dark:bg-navy-900/50 border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 font-bold text-xs">
-              <Building2 className="w-4 h-4 text-brand-indigo" />
-              <span>{brand}</span>
-            </div>
-          ))}
-        </Marquee>
       </section>
 
       {/* INTERACTIVE DOMAIN EXPLORER */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-xs font-bold text-brand-indigo dark:text-brand-cyan tracking-widest uppercase mb-2">
+          <h2 className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase mb-2">
             Specialized Career Tracks
           </h2>
           <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
             Choose Your High-Growth Domain
           </h3>
-          <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm">
-            Select a technology track below to view active internship stipends, hiring trends, and required skills.
-          </p>
         </div>
 
+        {/* Domain Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
           {domains.map((domain, idx) => {
             const Icon = domain.icon;
@@ -409,31 +381,25 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
                 onClick={() => setActiveDomainIndex(idx)}
                 className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-2.5 ${
                   isSelected
-                    ? 'bg-gradient-to-r from-brand-indigo to-brand-blue text-white shadow-glow-indigo scale-105'
-                    : 'bg-slate-100 dark:bg-navy-900/80 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md scale-105'
+                    : 'bg-white dark:bg-navy-900/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-800 border border-slate-200 dark:border-white/10'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-brand-indigo dark:text-brand-cyan'}`} />
+                <Icon className="w-4 h-4" />
                 <span>{domain.title}</span>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-extrabold ${
-                  isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-navy-800 text-brand-indigo dark:text-brand-cyan'
-                }`}>
-                  {domain.badge}
-                </span>
               </button>
             );
           })}
         </div>
 
+        {/* Active Domain Card */}
         <motion.div 
           key={activeDomainIndex}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="glass-panel p-8 rounded-3xl relative overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-50/90 dark:bg-navy-900/80"
+          className="p-8 rounded-3xl relative overflow-hidden border border-slate-200 dark:border-white/10 bg-white/90 dark:bg-navy-900/80 shadow-sm"
         >
-          <div className="absolute -right-10 -bottom-10 w-80 h-80 bg-brand-indigo/10 rounded-full blur-3xl pointer-events-none" />
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
             <div className="lg:col-span-2 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
@@ -441,35 +407,35 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
                 <span>Industry Trend: {domains[activeDomainIndex].growth}</span>
               </div>
               <h4 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-                {domains[activeDomainIndex].title} Industry Track
+                {domains[activeDomainIndex].title} Track
               </h4>
               <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                Work directly on live client deliverables under 1-on-1 engineering mentors. Gain production experience with modern tech stacks, automated testing, and cloud deployment pipelines.
+                Work directly on live client deliverables under 1-on-1 engineering mentors. Gain production experience with modern tech stacks and automated CI/CD pipelines.
               </p>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-                <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Stipend Range</span>
-                  <span className="text-sm font-bold text-brand-indigo dark:text-brand-cyan">{domains[activeDomainIndex].stipend}</span>
+                  <span className="text-sm font-bold text-slate-900 dark:text-white">{domains[activeDomainIndex].stipend}</span>
                 </div>
-                <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Duration</span>
                   <span className="text-sm font-bold text-slate-800 dark:text-slate-200">3 - 6 Months</span>
                 </div>
-                <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Perks Included</span>
                   <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">Offer Letter + LOR</span>
                 </div>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 text-center bg-white/80 dark:bg-navy-900/90">
-              <div className="w-12 h-12 mx-auto rounded-xl bg-brand-indigo/20 flex items-center justify-center text-brand-indigo dark:text-brand-cyan">
+            <div className="p-6 rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 text-center bg-slate-50 dark:bg-navy-900/90">
+              <div className="w-12 h-12 mx-auto rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center">
                 <Award className="w-6 h-6" />
               </div>
               <h5 className="text-slate-900 dark:text-white font-bold text-base">Ready to start?</h5>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Applications reviewed within 24 hours. Early bird spots available.
+                Applications reviewed within 24 hours.
               </p>
               <Button
                 variant="primary"
@@ -477,17 +443,17 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
                 className="w-full"
                 onClick={() => setActiveTab('internships')}
               >
-                Browse {domains[activeDomainIndex].title} Roles
+                Browse Roles
               </Button>
             </div>
           </div>
         </motion.div>
       </section>
 
-      {/* FEATURES BENTO BOX SECTION */}
+      {/* BENTO GRID FEATURES WITH ALTERNATING LEFT/RIGHT SLIDE-IN */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs font-bold text-brand-indigo tracking-widest uppercase mb-2">
+          <h2 className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase mb-2">
             The Navyan Ecosystem
           </h2>
           <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
@@ -495,60 +461,54 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </h3>
         </div>
 
-        <motion.div 
-          variants={bentoGridStagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
-        >
+        {/* Bento Grid layout with alternating Left/Right slide-in cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <BentoCard
+            index={0}
             icon={Briefcase}
             title="Verified Industry Internships"
             subtitle="Work directly on live client codebases, learn production CI/CD workflows under 1-on-1 senior engineering leads, and earn guaranteed stipends."
             tag="Guaranteed Stipend"
             colSpan="md:col-span-2"
           >
-            <img
-              src="/blob.svg"
-              alt="Ambient Glow"
-              className="absolute -right-10 -top-10 w-48 h-48 opacity-20 pointer-events-none blur-2xl"
-            />
             <div className="flex items-center gap-3 pt-2">
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-xl border border-emerald-500/20">
                 ⚡ 98.4% Placement Rate
               </span>
-              <span className="text-xs font-bold text-brand-indigo dark:text-brand-cyan bg-brand-indigo/10 px-3 py-1 rounded-xl border border-brand-indigo/20">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-white/10 px-3 py-1 rounded-xl border border-slate-200 dark:border-white/10">
                 1-on-1 Mentorship
               </span>
             </div>
           </BentoCard>
 
           <BentoCard
+            index={1}
             icon={Code}
             title="IT Services & AI Engineering"
             subtitle="Custom web platforms, mobile apps, fine-tuned LLMs, and enterprise cloud architecture built for fast-growing businesses."
             tag="Enterprise Grade"
           >
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 pt-2">
-              <CheckCircle2 className="w-4 h-4 text-brand-indigo dark:text-brand-cyan shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>Instant Cost & Timeline Estimator</span>
             </div>
           </BentoCard>
 
           <BentoCard
+            index={2}
             icon={ShieldCheck}
             title="Certification Tracking & Verification"
             subtitle="Tamper-proof certificates & offer letters backed by unique cryptographic verification hashes & instant QR code verification."
             tag="ISO Certified"
           >
-            <div className="p-3 rounded-2xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 text-xs flex items-center justify-between">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 text-xs flex items-center justify-between">
               <span className="text-slate-500 dark:text-slate-400">Sample ID:</span>
-              <code className="font-bold text-brand-indigo dark:text-brand-cyan font-mono">NAV-2026-8941</code>
+              <code className="font-bold text-slate-900 dark:text-white font-mono">NAV-2026-8941</code>
             </div>
           </BentoCard>
 
           <BentoCard
+            index={3}
             icon={TrendingUp}
             title="Accelerated Career Growth & PPO Track"
             subtitle="Top 30% of interns receive immediate Pre-Placement Offers (PPO) with full-time packages ranging up to ₹22.5 LPA."
@@ -556,46 +516,29 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             colSpan="md:col-span-2"
           >
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
-              <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 text-center">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 text-center">
                 <span className="text-[10px] text-slate-500 block">Highest Package</span>
-                <span className="text-sm font-extrabold text-amber-500 dark:text-amber-400">₹22.5 LPA</span>
+                <span className="text-sm font-extrabold text-amber-600 dark:text-amber-400">₹22.5 LPA</span>
               </div>
-              <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 text-center">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 text-center">
                 <span className="text-[10px] text-slate-500 block">Average Package</span>
                 <span className="text-sm font-extrabold text-slate-900 dark:text-white">₹8.5 LPA</span>
               </div>
-              <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 text-center col-span-2 sm:col-span-1">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/5 text-center col-span-2 sm:col-span-1">
                 <span className="text-[10px] text-slate-500 block">Day-1 Offer Letter</span>
                 <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">Guaranteed</span>
               </div>
             </div>
           </BentoCard>
-        </motion.div>
-
-        <div className="w-full overflow-hidden leading-none pt-16">
-          <svg
-            className="relative block w-full h-12 md:h-24 text-[color:var(--bg-secondary)]"
-            viewBox="0 0 1440 320"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,144C672,139,768,181,864,197.3C960,213,1056,203,1152,186.7C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-              fill="currentColor"
-            ></path>
-          </svg>
         </div>
+
       </section>
 
       {/* FEATURED INTERNSHIPS PREVIEW */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <img
-          src="/low-poly-grid-haikei.svg"
-          alt="Low Poly Tech Grid"
-          className="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-15 pointer-events-none rounded-3xl -z-10 blur-sm"
-        />
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <h2 className="text-xs font-bold text-brand-indigo dark:text-brand-cyan tracking-widest uppercase mb-2">
+            <h2 className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase mb-2">
               Featured Opportunities
             </h2>
             <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white">
@@ -604,7 +547,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </div>
           <button
             onClick={() => setActiveTab('internships')}
-            className="inline-flex items-center gap-2 text-xs font-bold text-brand-indigo hover:text-brand-cyan transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white hover:underline transition-all"
           >
             <span>View All Internships</span>
             <ArrowRight className="w-4 h-4" />
@@ -612,17 +555,19 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {MOCK_INTERNSHIPS.slice(0, 3).map((item) => (
+          {MOCK_INTERNSHIPS.slice(0, 3).map((item, idx) => (
             <motion.div 
               key={item.id} 
+              initial={{ opacity: 0, x: idx % 2 === 0 ? -60 : 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ type: 'spring', stiffness: 70, damping: 18, delay: idx * 0.1 }}
               whileHover={{ y: -4 }}
-              viewport={{ once: true }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              className="glass-panel p-6 rounded-2xl bg-white/80 dark:bg-navy-900/70 border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4"
+              className="p-6 rounded-2xl bg-white/90 dark:bg-navy-900/70 border border-slate-200/80 dark:border-white/10 flex flex-col justify-between space-y-4 shadow-sm"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-brand-indigo/10 dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-cyan border border-brand-indigo/30 uppercase tracking-wider">
+                  <span className="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 uppercase tracking-wider">
                     {item.domain}
                   </span>
                   <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
@@ -638,37 +583,38 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
 
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {item.skills.map((skill, sIdx) => (
-                    <span key={sIdx} className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-navy-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/5">
+                    <span key={sIdx} className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-navy-950 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/5">
                       {skill}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-slate-500 block uppercase font-medium">Stipend</span>
                   <span className="text-xs font-extrabold text-slate-900 dark:text-white">{item.stipend}</span>
                 </div>
-                <button
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={() => {
                     setActiveTab('internships');
                     onSelectInternship(item);
                   }}
-                  className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-navy-850 hover:bg-brand-indigo hover:text-white text-slate-900 dark:text-white text-xs font-bold transition-all border border-slate-300 dark:border-white/10"
                 >
                   Apply Now
-                </button>
+                </Button>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* STUDENT TESTIMONIALS CAROUSEL */}
+      {/* STUDENT TESTIMONIALS WITH ALTERNATING SLIDE-IN CARDS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-xs font-bold text-brand-indigo tracking-widest uppercase mb-2">
+          <h2 className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase mb-2">
             Success Stories
           </h2>
           <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white">
@@ -677,13 +623,15 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {MOCK_TESTIMONIALS.map((t) => (
+          {MOCK_TESTIMONIALS.map((t, idx) => (
             <motion.div 
               key={t.id} 
+              initial={{ opacity: 0, x: idx % 2 === 0 ? -60 : 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ type: 'spring', stiffness: 70, damping: 18, delay: idx * 0.1 }}
               whileHover={{ y: -4 }}
-              viewport={{ once: true }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              className="glass-panel p-6 rounded-2xl bg-white/80 dark:bg-navy-900/70 border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4"
+              className="p-6 rounded-2xl bg-white/90 dark:bg-navy-900/70 border border-slate-200/80 dark:border-white/10 flex flex-col justify-between space-y-4 shadow-sm"
             >
               <div className="space-y-3">
                 <div className="flex items-center gap-1 text-amber-400">
@@ -696,11 +644,11 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
                 </p>
               </div>
 
-              <div className="flex items-center gap-3 pt-4 border-t border-slate-200 dark:border-white/10">
+              <div className="flex items-center gap-3 pt-4 border-t border-slate-200/80 dark:border-white/10">
                 <img
                   src={t.avatar}
                   alt={t.name}
-                  className="w-10 h-10 rounded-full object-cover border border-brand-indigo/50"
+                  className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-white/20"
                 />
                 <div>
                   <h5 className="text-slate-900 dark:text-white font-bold text-xs">{t.name}</h5>
@@ -712,28 +660,23 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* PROMPT: FINAL CALL-TO-ACTION SECTION RIGHT BEFORE FOOTER */}
+      {/* ADAPTIVE WAVE DIVIDER: NO BLACK CRACKS IN LIGHT MODE! */}
+      <div className="w-full overflow-hidden leading-none text-slate-50 dark:text-navy-950 transition-colors">
+        <svg
+          className="relative block w-full h-12 md:h-20 fill-current"
+          viewBox="0 0 1440 120"
+          preserveAspectRatio="none"
+        >
+          <path d="M0,32L60,42.7C120,53,240,75,360,80C480,85,600,75,720,58.7C840,43,960,21,1080,21.3C1200,21,1320,43,1380,53.3L1440,64L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z"></path>
+        </svg>
+      </div>
+
+      {/* FINAL CALL-TO-ACTION SECTION */}
       <section className="relative w-full pt-0 pb-16">
-        
-        {/* Visual Top Wave Border */}
-        <div className="w-full overflow-hidden leading-none text-navy-900 dark:text-navy-900 mb-[-1px]">
-          <img 
-            src="/assets/footer-wave.svg" 
-            alt="Footer Wave Border" 
-            className="w-full h-12 md:h-20 object-cover"
-          />
-        </div>
-
-        {/* Deep Primary Background Container */}
-        <div className="bg-gradient-to-br from-navy-900 via-brand-indigo/90 to-navy-950 dark:from-navy-900 dark:via-navy-950 dark:to-navy-950 text-white border-y border-brand-indigo/30 py-16 sm:py-24 relative overflow-hidden">
+        <div className="bg-slate-900 dark:bg-navy-900 text-white py-16 sm:py-24 relative overflow-hidden">
           
-          {/* Ambient Lighting Blobs */}
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-cyan/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-brand-indigo/30 rounded-full blur-3xl pointer-events-none" />
-
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-8">
             
-            {/* Scroll Transform Headline ('Ready to build your future?') */}
             <motion.h2
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1.0 }}
@@ -749,12 +692,11 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-slate-200 dark:text-slate-300 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed"
+              className="text-slate-300 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed"
             >
               Join over 15,000 students building production code, earning verified certificates, and securing top tech PPO roles.
             </motion.p>
 
-            {/* Prominent Glowing Button ('Join Navyan Today') with Infinite Pulse Ring */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -762,27 +704,22 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <div className="relative inline-flex group">
-                {/* Infinite Outer Pulse Ring */}
-                <span className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-brand-indigo via-brand-cyan to-brand-emerald opacity-75 blur-md animate-pulse group-hover:opacity-100 transition-opacity" />
-                
-                <Button
-                  variant="primary"
-                  size="lg"
-                  magnetic={true}
-                  icon={ArrowRight}
-                  onClick={onOpenAuth}
-                  className="relative bg-navy-950 text-white hover:bg-navy-900 border border-white/20 text-base py-4 px-8"
-                >
-                  Join Navyan Today
-                </Button>
-              </div>
+              <Button
+                variant="primary"
+                size="lg"
+                magnetic={true}
+                icon={ArrowRight}
+                onClick={onOpenAuth}
+                className="bg-white text-slate-900 hover:bg-slate-100 border-white text-base py-3.5 px-8"
+              >
+                Join Navyan Today
+              </Button>
 
               <Button
-                variant="ghost"
+                variant="secondary"
                 size="lg"
                 onClick={() => setActiveTab('internships')}
-                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md"
+                className="border-white/20 bg-white/10 text-white hover:bg-white/20"
               >
                 Browse All Internships
               </Button>
@@ -790,7 +727,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
 
           </div>
         </div>
-
       </section>
 
     </div>

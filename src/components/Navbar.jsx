@@ -15,6 +15,7 @@ import {
   FileCheck2,
   LayoutDashboard
 } from 'lucide-react';
+import { Button } from './ui/Button';
 
 export default function Navbar({ 
   activeTab, 
@@ -22,8 +23,7 @@ export default function Navbar({
   onOpenSearch, 
   onOpenAuth, 
   isDarkMode, 
-  setIsDarkMode,
-  userProfile 
+  setIsDarkMode 
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,12 +36,12 @@ export default function Navbar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Decluttered: Max 5 key nav items, no inline badges ("POPULAR", "HIRING")
   const navItems = [
     { id: 'home', label: 'Home', icon: Sparkles },
-    { id: 'internships', label: 'Internships', icon: GraduationCap, badge: 'Popular' },
-    { id: 'services', label: 'IT Services', icon: Code2 },
+    { id: 'internships', label: 'Internships', icon: GraduationCap },
+    { id: 'services', label: 'Services', icon: Code2 },
     { id: 'courses', label: 'Courses', icon: Briefcase },
-    { id: 'jobs', label: 'Jobs', icon: Briefcase, badge: 'Hiring' },
     { id: 'verify', label: 'Verify ID', icon: FileCheck2 },
   ];
 
@@ -49,7 +49,7 @@ export default function Navbar({
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/85 dark:bg-navy-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 shadow-lg py-3' 
+          ? 'bg-white/85 dark:bg-navy-950/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 shadow-sm py-3' 
           : 'bg-transparent py-5'
       }`}
     >
@@ -61,24 +61,21 @@ export default function Navbar({
             onClick={() => setActiveTab('home')}
             className="flex items-center gap-3 group focus:outline-none"
           >
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-indigo via-brand-blue to-brand-cyan p-0.5 shadow-glow-indigo transition-transform group-hover:scale-105">
-              <div className="w-full h-full bg-slate-900 dark:bg-navy-950 rounded-[10px] flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-brand-cyan animate-pulse" />
-              </div>
+            <div className="w-9 h-9 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-900 shadow-sm transition-transform group-hover:scale-105">
+              <Sparkles className="w-5 h-5" />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
+              <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
                 NAVYAN
-                <span className="w-2 h-2 rounded-full bg-brand-cyan animate-ping inline-block" />
               </span>
-              <span className="text-[10px] font-medium tracking-widest text-slate-500 dark:text-slate-400 uppercase -mt-1">
+              <span className="text-[10px] font-semibold tracking-widest text-slate-500 dark:text-slate-400 uppercase -mt-1">
                 Tech & Internships
               </span>
             </div>
           </button>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 dark:bg-navy-900/60 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
+          {/* Desktop Airy Navigation Links (px-6 py-3.5 gap-6) */}
+          <nav className="hidden lg:flex items-center gap-6 bg-slate-100/80 dark:bg-navy-900/70 px-6 py-2 rounded-full border border-slate-200/80 dark:border-white/10 backdrop-blur-md">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -86,76 +83,61 @@ export default function Navbar({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`relative px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 flex items-center gap-2 ${
+                  className={`relative py-1 text-xs font-semibold transition-all duration-200 flex items-center gap-2 ${
                     isActive
-                      ? 'text-white bg-gradient-to-r from-brand-indigo to-brand-blue shadow-md scale-105'
-                      : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
+                      ? 'text-slate-900 dark:text-white font-bold'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-brand-indigo dark:text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-brand-indigo dark:text-brand-cyan' : 'text-slate-400'}`} />
                   {item.label}
-                  {item.badge && (
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider font-bold ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-brand-indigo/10 dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-cyan border border-brand-indigo/30'
-                    }`}>
-                      {item.badge}
-                    </span>
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full bg-slate-900 dark:bg-white" />
                   )}
                 </button>
               );
             })}
           </nav>
 
-          {/* Action Tools & Auth */}
+          {/* 3 Utility Actions on Right: 1) Command Palette, 2) Theme Switcher, 3) Portal Login */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Quick Spotlight Search */}
+            
+            {/* 1) Command Palette / Search Trigger */}
             <button
               onClick={onOpenSearch}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-brand-indigo/50 transition-all text-xs"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100/80 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-white/20 transition-all text-xs"
               title="Search internships, courses & services"
             >
-              <Search className="w-3.5 h-3.5 text-brand-indigo dark:text-brand-cyan" />
+              <Search className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               <span>Search...</span>
               <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-white dark:bg-navy-800 text-slate-500 dark:text-slate-400 rounded border border-slate-200 dark:border-white/10">
                 ⌘K
               </kbd>
             </button>
 
-            {/* Theme Switcher Toggle Button */}
+            {/* 2) Theme Switcher Toggle */}
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2.5 rounded-xl bg-slate-100 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5 transition-all shadow-sm"
+              className="p-2.5 rounded-xl bg-slate-100/80 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10 transition-all"
               aria-label="Toggle Theme"
               title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               {isDarkMode ? (
-                <Sun className="w-4 h-4 text-amber-400 animate-spin-slow" />
+                <Sun className="w-4 h-4 text-amber-400" />
               ) : (
-                <Moon className="w-4 h-4 text-brand-indigo" />
+                <Moon className="w-4 h-4 text-slate-700" />
               )}
             </button>
 
-            {/* Dashboard Link */}
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 ${
-                activeTab === 'dashboard'
-                  ? 'bg-brand-indigo text-white shadow-glow-indigo border border-indigo-400/30'
-                  : 'bg-slate-100 dark:bg-navy-850 hover:bg-slate-200 dark:hover:bg-navy-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10'
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4 text-brand-indigo dark:text-brand-cyan" />
-              <span>Dashboard</span>
-            </button>
-
-            {/* Login / Auth Modal Trigger */}
-            <button
+            {/* 3) Single Primary "Portal Login" Button (Humanized Slate/White Token) */}
+            <Button
+              variant="primary"
+              size="sm"
+              icon={User}
               onClick={onOpenAuth}
-              className="gradient-btn px-4 py-2 rounded-xl text-xs font-bold text-white shadow-glow-indigo flex items-center gap-2"
             >
-              <User className="w-3.5 h-3.5" />
-              <span>Portal Login</span>
-            </button>
+              Portal Login
+            </Button>
           </div>
 
           {/* Mobile Menu Toggle Button */}
@@ -165,14 +147,14 @@ export default function Navbar({
               className="p-2 rounded-lg bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300"
               aria-label="Toggle Theme"
             >
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-brand-indigo" />}
+              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
             </button>
 
             <button
               onClick={onOpenSearch}
               className="p-2 rounded-lg bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300"
             >
-              <Search className="w-4 h-4 text-brand-indigo dark:text-brand-cyan" />
+              <Search className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -199,12 +181,12 @@ export default function Navbar({
                 }}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                   isActive 
-                    ? 'bg-gradient-to-r from-brand-indigo to-brand-blue text-white shadow-md' 
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold shadow-sm' 
                     : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className="w-4 h-4 text-brand-indigo dark:text-brand-cyan" />
+                  <Icon className="w-4 h-4" />
                   <span>{item.label}</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -220,19 +202,21 @@ export default function Navbar({
               }}
               className="w-full py-3 rounded-xl bg-slate-100 dark:bg-navy-850 text-slate-900 dark:text-white font-semibold text-sm flex items-center justify-center gap-2 border border-slate-200 dark:border-white/10"
             >
-              <LayoutDashboard className="w-4 h-4 text-brand-indigo dark:text-brand-cyan" />
+              <LayoutDashboard className="w-4 h-4 text-slate-700 dark:text-slate-300" />
               Student Dashboard
             </button>
-            <button
+            <Button
+              variant="primary"
+              size="md"
+              icon={User}
+              className="w-full justify-center"
               onClick={() => {
                 onOpenAuth();
                 setMobileMenuOpen(false);
               }}
-              className="w-full gradient-btn py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2"
             >
-              <User className="w-4 h-4" />
               Portal Login / Register
-            </button>
+            </Button>
           </div>
         </div>
       )}
