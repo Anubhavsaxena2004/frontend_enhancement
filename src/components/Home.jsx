@@ -347,7 +347,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* PROMPT: INFINITE SMOOTH-SCROLLING MARQUEE SECTION WITH GRADIENT EDGE MASKS */}
+      {/* INFINITE SMOOTH-SCROLLING MARQUEE SECTION WITH GRADIENT EDGE MASKS */}
       <section className="border-y border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-navy-950/60 py-10 overflow-hidden space-y-6">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-xs font-bold text-brand-indigo dark:text-brand-cyan uppercase tracking-widest">
@@ -355,7 +355,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </p>
         </div>
 
-        {/* Marquee 1: Technologies Badge Track */}
         <Marquee speed="30s" pauseOnHover={true}>
           {technologies.map((tech, idx) => {
             const Icon = tech.icon;
@@ -376,7 +375,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           })}
         </Marquee>
 
-        {/* Marquee 2: Hiring Companies Track (Reverse Direction) */}
         <Marquee speed="35s" reverse={true} pauseOnHover={true}>
           {['GOOGLE', 'MICROSOFT', 'AMAZON', 'FLIPKART', 'RAZORPAY', 'SWIGGY', 'TCS', 'INFOSYS', 'CRED', 'PAYTM'].map((brand, i) => (
             <div key={i} className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-100 dark:bg-navy-900/50 border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 font-bold text-xs">
@@ -401,7 +399,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </p>
         </div>
 
-        {/* Domain Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
           {domains.map((domain, idx) => {
             const Icon = domain.icon;
@@ -428,7 +425,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           })}
         </div>
 
-        {/* Active Domain Spotlight Card */}
         <motion.div 
           key={activeDomainIndex}
           initial={{ opacity: 0, y: 10 }}
@@ -486,7 +482,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             </div>
           </div>
         </motion.div>
-
       </section>
 
       {/* FEATURES BENTO BOX SECTION */}
@@ -500,7 +495,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </h3>
         </div>
 
-        {/* Bento Box CSS Grid */}
         <motion.div 
           variants={bentoGridStagger}
           initial="hidden"
@@ -508,7 +502,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           viewport={{ once: true, margin: '-50px' }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          {/* Card 1: Verified Internships */}
           <BentoCard
             icon={Briefcase}
             title="Verified Industry Internships"
@@ -531,7 +524,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             </div>
           </BentoCard>
 
-          {/* Card 2: IT Services */}
           <BentoCard
             icon={Code}
             title="IT Services & AI Engineering"
@@ -544,7 +536,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             </div>
           </BentoCard>
 
-          {/* Card 3: Certification Tracking */}
           <BentoCard
             icon={ShieldCheck}
             title="Certification Tracking & Verification"
@@ -557,7 +548,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             </div>
           </BentoCard>
 
-          {/* Card 4: Career Growth */}
           <BentoCard
             icon={TrendingUp}
             title="Accelerated Career Growth & PPO Track"
@@ -582,7 +572,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </BentoCard>
         </motion.div>
 
-        {/* Seamless Layered Wave Section Divider */}
         <div className="w-full overflow-hidden leading-none pt-16">
           <svg
             className="relative block w-full h-12 md:h-24 text-[color:var(--bg-secondary)]"
@@ -595,7 +584,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             ></path>
           </svg>
         </div>
-
       </section>
 
       {/* FEATURED INTERNSHIPS PREVIEW */}
@@ -724,36 +712,85 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* CTA BANNER */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-3xl p-10 sm:p-14 overflow-hidden bg-gradient-to-r from-brand-indigo via-brand-blue to-brand-cyan shadow-glow-indigo text-center text-white">
-          <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-            <h2 className="text-3xl sm:text-5xl font-extrabold">
-              Ready to Kickstart Your Tech Journey?
-            </h2>
-            <p className="text-white/90 text-sm sm:text-base max-w-2xl mx-auto">
-              Join over 15,000 students building production code and earning verified certificates. Applications close soon for the upcoming batch.
-            </p>
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => setActiveTab('internships')}
-                className="bg-navy-950 text-white hover:bg-navy-900"
-              >
-                Apply for Internships
-              </Button>
+      {/* PROMPT: FINAL CALL-TO-ACTION SECTION RIGHT BEFORE FOOTER */}
+      <section className="relative w-full pt-0 pb-16">
+        
+        {/* Visual Top Wave Border */}
+        <div className="w-full overflow-hidden leading-none text-navy-900 dark:text-navy-900 mb-[-1px]">
+          <img 
+            src="/assets/footer-wave.svg" 
+            alt="Footer Wave Border" 
+            className="w-full h-12 md:h-20 object-cover"
+          />
+        </div>
+
+        {/* Deep Primary Background Container */}
+        <div className="bg-gradient-to-br from-navy-900 via-brand-indigo/90 to-navy-950 dark:from-navy-900 dark:via-navy-950 dark:to-navy-950 text-white border-y border-brand-indigo/30 py-16 sm:py-24 relative overflow-hidden">
+          
+          {/* Ambient Lighting Blobs */}
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-cyan/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-brand-indigo/30 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-8">
+            
+            {/* Scroll Transform Headline ('Ready to build your future?') */}
+            <motion.h2
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1.0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+              className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white"
+            >
+              Ready to build your future?
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-slate-200 dark:text-slate-300 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed"
+            >
+              Join over 15,000 students building production code, earning verified certificates, and securing top tech PPO roles.
+            </motion.p>
+
+            {/* Prominent Glowing Button ('Join Navyan Today') with Infinite Pulse Ring */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+              <div className="relative inline-flex group">
+                {/* Infinite Outer Pulse Ring */}
+                <span className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-brand-indigo via-brand-cyan to-brand-emerald opacity-75 blur-md animate-pulse group-hover:opacity-100 transition-opacity" />
+                
+                <Button
+                  variant="primary"
+                  size="lg"
+                  magnetic={true}
+                  icon={ArrowRight}
+                  onClick={onOpenAuth}
+                  className="relative bg-navy-950 text-white hover:bg-navy-900 border border-white/20 text-base py-4 px-8"
+                >
+                  Join Navyan Today
+                </Button>
+              </div>
+
               <Button
                 variant="ghost"
                 size="lg"
-                onClick={onOpenAuth}
-                className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white border border-white/30"
+                onClick={() => setActiveTab('internships')}
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md"
               >
-                Create Student Account
+                Browse All Internships
               </Button>
-            </div>
+            </motion.div>
+
           </div>
         </div>
+
       </section>
 
     </div>
