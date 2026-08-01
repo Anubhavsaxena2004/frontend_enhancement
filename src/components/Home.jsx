@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Sparkles, 
   ArrowRight, 
@@ -40,17 +41,20 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
   };
 
   return (
-    <div className="space-y-24 pb-20">
+    <div className="space-y-24 pb-20 overflow-x-hidden">
       
       {/* HERO SECTION */}
       <section className="relative min-h-[90vh] pt-32 pb-20 flex items-center justify-center overflow-hidden">
-        {/* Animated Gradient Mesh Blobs */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-brand-indigo/30 via-brand-blue/20 to-brand-cyan/25 rounded-full blur-[120px] pointer-events-none animate-pulse-glow" />
-        <div className="absolute top-20 right-10 w-96 h-96 bg-brand-violet/20 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-brand-cyan/15 rounded-full blur-[100px] pointer-events-none" />
         
-        {/* Background Mesh Grid */}
-        <div className="absolute inset-0 bg-mesh-pattern opacity-40 pointer-events-none" />
+        {/* PROMPT 1: Integrating Hero Background SVG (Haikei Glow) */}
+        <img
+          src="/blurry-gradient.svg"
+          alt="Blurry Gradient Background"
+          className="absolute -top-20 left-1/2 -translate-x-1/2 w-full max-w-5xl opacity-40 blur-3xl pointer-events-none -z-10"
+        />
+
+        {/* Subtle Grid Mask Overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(#2563eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           
@@ -62,11 +66,16 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             <ChevronRight className="w-3.5 h-3.5" />
           </div>
 
-          {/* Main Title */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.15]">
+          {/* PROMPT 1: Framer Motion Headline Animation */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.15]"
+          >
             Bridge Academic Learning with <br className="hidden sm:inline" />
             <span className="gradient-text-primary">Real High-Tech Execution</span>
-          </h1>
+          </motion.h1>
 
           {/* Subtext */}
           <p className="mt-6 text-base sm:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
@@ -256,8 +265,8 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
 
       </section>
 
-      {/* WHY NAVYAN - 3D HOVER CARDS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* PROMPT 2: BENTO GRID CARDS WITH MICRO-GLOW */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-xs font-bold text-brand-indigo tracking-widest uppercase mb-2">
             The Navyan Advantage
@@ -267,45 +276,77 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              title: 'Guaranteed Live Projects',
-              icon: Terminal,
-              desc: 'No theoretical dummy tutorials. You will commit code directly to real client repositories and production cloud servers.',
-              color: 'from-brand-indigo to-brand-blue'
-            },
-            {
-              title: 'Verifiable Credentials Day-1',
-              icon: ShieldCheck,
-              desc: 'Receive an instant digitally signed Offer Letter and Certificate with unique verification hashes & QR codes.',
-              color: 'from-brand-blue to-brand-cyan'
-            },
-            {
-              title: 'Direct PPO & Career Placement',
-              icon: TrendingUp,
-              desc: 'Top 30% of interns receive immediate Pre-Placement Offers (PPO) with full-time packages ranging up to ₹22.5 LPA.',
-              color: 'from-brand-cyan to-brand-emerald'
-            }
-          ].map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <div key={idx} className="glass-panel p-8 rounded-3xl glass-panel-hover relative overflow-hidden group">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${item.color} p-0.5 mb-6 group-hover:scale-110 transition-transform`}>
-                  <div className="w-full h-full bg-navy-950 rounded-[14px] flex items-center justify-center text-white">
-                    <Icon className="w-7 h-7" />
-                  </div>
-                </div>
-                <h4 className="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors">
-                  {item.title}
-                </h4>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  {item.desc}
-                </p>
+        {/* PROMPT 2: 3-column layout Bento Grid format */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          {/* Primary Feature Card (Largest one with Haikei blob glow) */}
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 hover:border-primary/40 transition-all duration-300 group">
+            {/* Embedded Haikei blob.svg glow */}
+            <img
+              src="/blob.svg"
+              alt="Ambient Glow"
+              className="absolute -right-10 -top-10 w-48 h-48 opacity-20 pointer-events-none blur-2xl"
+            />
+            
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-indigo to-brand-blue p-0.5 mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-full h-full bg-navy-950 rounded-[14px] flex items-center justify-center text-white">
+                <Terminal className="w-7 h-7" />
               </div>
-            );
-          })}
+            </div>
+            <h4 className="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors">
+              Guaranteed Live Projects
+            </h4>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              No theoretical dummy tutorials. You will commit code directly to real client repositories and production cloud servers under 1-on-1 mentorship.
+            </p>
+          </div>
+
+          {/* Secondary Card 1 */}
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 hover:border-primary/40 transition-all duration-300 group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-blue to-brand-cyan p-0.5 mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-full h-full bg-navy-950 rounded-[14px] flex items-center justify-center text-white">
+                <ShieldCheck className="w-7 h-7 text-brand-cyan" />
+              </div>
+            </div>
+            <h4 className="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors">
+              Verifiable Credentials Day-1
+            </h4>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              Receive an instant digitally signed Offer Letter and Certificate with unique verification hashes (`NAV-2026-8941`) & QR codes.
+            </p>
+          </div>
+
+          {/* Secondary Card 2 */}
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 hover:border-primary/40 transition-all duration-300 group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-cyan to-brand-emerald p-0.5 mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-full h-full bg-navy-950 rounded-[14px] flex items-center justify-center text-white">
+                <TrendingUp className="w-7 h-7 text-emerald-400" />
+              </div>
+            </div>
+            <h4 className="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors">
+              Direct PPO & Career Placement
+            </h4>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              Top 30% of interns receive immediate Pre-Placement Offers (PPO) with full-time packages ranging up to ₹22.5 LPA.
+            </p>
+          </div>
+
         </div>
+
+        {/* PROMPT 3: Seamless Layered Wave Section Divider */}
+        <div className="w-full overflow-hidden leading-none pt-12">
+          <svg
+            className="relative block w-full h-12 md:h-24 text-[color:var(--bg-secondary)]"
+            viewBox="0 0 1440 320"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,144C672,139,768,181,864,197.3C960,213,1056,203,1152,186.7C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </div>
+
       </section>
 
       {/* FEATURED INTERNSHIPS PREVIEW */}
