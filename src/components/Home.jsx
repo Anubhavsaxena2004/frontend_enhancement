@@ -350,7 +350,13 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
       </section>
 
       {/* FEATURED INTERNSHIPS PREVIEW */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Ambient Low-Poly Grid Background */}
+        <img
+          src="/low-poly-grid-haikei.svg"
+          alt="Low Poly Tech Grid"
+          className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none rounded-3xl -z-10 blur-sm"
+        />
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
             <h2 className="text-xs font-bold text-brand-cyan tracking-widest uppercase mb-2">
