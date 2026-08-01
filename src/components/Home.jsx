@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './ui/Button';
+import Marquee from './ui/Marquee';
 import { 
   Sparkles, 
   ArrowRight, 
@@ -20,11 +21,16 @@ import {
   Compass,
   Cpu,
   Layers,
-  Terminal
+  Terminal,
+  Server,
+  Database,
+  Globe,
+  Flame,
+  Cloud
 } from 'lucide-react';
 import { MOCK_INTERNSHIPS, MOCK_TESTIMONIALS, MOCK_SERVICES } from '../data/mockData';
 
-// Motion Primitives - Staggered Word Reveal for Headline (viewport once: true)
+// Headline Stagger Variant
 const headlineText = "Launch Your IT Career with Navyan.";
 
 const sentenceContainer = {
@@ -80,7 +86,7 @@ const bentoCardVariant = {
   }
 };
 
-// Reusable BentoCard Component with Mouse Spotlight Radial Glow
+// Reusable BentoCard Component
 function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag, colSpan = '' }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -103,7 +109,6 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
       onMouseLeave={() => setIsHovered(false)}
       className={`relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/5 backdrop-blur-xl p-8 hover:border-primary/40 transition-colors duration-300 group ${colSpan} ${className}`}
     >
-      {/* Cursor Mouse Spotlight Radial Gradient */}
       {isHovered && (
         <div
           className="pointer-events-none absolute -inset-px transition-opacity duration-300"
@@ -113,7 +118,6 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
         />
       )}
 
-      {/* Card Content */}
       <div className="relative z-10 flex flex-col justify-between h-full space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -155,6 +159,18 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
     { title: 'Cloud & DevOps', icon: Layers, badge: 'Trending', stipend: '₹15k - ₹22k/mo', growth: '+180% Hiring' },
     { title: 'UI/UX Design', icon: Sparkles, badge: 'Creative', stipend: '₹10k - ₹16k/mo', growth: '+95% Hiring' },
     { title: 'Cybersecurity', icon: ShieldCheck, badge: 'Essential', stipend: '₹14k - ₹20k/mo', growth: '+160% Hiring' }
+  ];
+
+  const technologies = [
+    { name: 'React 18', type: 'Frontend Framework', color: 'text-cyan-400', icon: Code2 },
+    { name: 'Node.js', type: 'Backend Runtime', color: 'text-emerald-400', icon: Server },
+    { name: 'Python', type: 'AI & Machine Learning', color: 'text-amber-400', icon: Cpu },
+    { name: 'AWS Cloud', type: 'DevOps & Infra', color: 'text-amber-500', icon: Cloud },
+    { name: 'Figma', type: 'UI/UX Design', color: 'text-pink-400', icon: Sparkles },
+    { name: 'TypeScript', type: 'Typed JavaScript', color: 'text-blue-400', icon: Code },
+    { name: 'Docker', type: 'Containerization', color: 'text-cyan-500', icon: Layers },
+    { name: 'PyTorch', type: 'Deep Learning', color: 'text-red-400', icon: Flame },
+    { name: 'MongoDB', type: 'NoSQL Database', color: 'text-emerald-500', icon: Database },
   ];
 
   const handleQuickVerify = (e) => {
@@ -331,29 +347,152 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* MARQUEE BRAND TRUST BANNER */}
-      <section className="border-y border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-navy-950/60 py-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 text-center mb-6">
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-            Our Interns & Alumni Work At Industry Leaders
+      {/* PROMPT: INFINITE SMOOTH-SCROLLING MARQUEE SECTION WITH GRADIENT EDGE MASKS */}
+      <section className="border-y border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-navy-950/60 py-10 overflow-hidden space-y-6">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-xs font-bold text-brand-indigo dark:text-brand-cyan uppercase tracking-widest">
+            Technologies We Teach & Build With
           </p>
         </div>
-        <div className="flex whitespace-nowrap overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_128px,black_calc(100%-128px),transparent)]">
-          <div className="flex animate-marquee gap-12 text-slate-600 dark:text-slate-400 font-bold text-lg items-center">
-            {['GOOGLE', 'MICROSOFT', 'AMAZON', 'FLIPKART', 'RAZORPAY', 'SWIGGY', 'TCS', 'INFOSYS', 'CRED', 'PAYTM'].concat(['GOOGLE', 'MICROSOFT', 'AMAZON', 'FLIPKART', 'RAZORPAY', 'SWIGGY', 'TCS', 'INFOSYS', 'CRED', 'PAYTM']).map((brand, i) => (
-              <div key={i} className="flex items-center gap-3 hover:text-slate-900 dark:hover:text-white transition-colors">
-                <Building2 className="w-5 h-5 text-brand-indigo" />
-                <span>{brand}</span>
+
+        {/* Marquee 1: Technologies Badge Track */}
+        <Marquee speed="30s" pauseOnHover={true}>
+          {technologies.map((tech, idx) => {
+            const Icon = tech.icon;
+            return (
+              <div 
+                key={idx} 
+                className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-white dark:bg-navy-900/90 border border-slate-200 dark:border-white/10 shadow-sm hover:border-brand-indigo/50 transition-colors"
+              >
+                <div className={`w-8 h-8 rounded-xl bg-slate-100 dark:bg-navy-950 flex items-center justify-center ${tech.color}`}>
+                  <Icon className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-extrabold text-slate-900 dark:text-white">{tech.name}</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">{tech.type}</div>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
+            );
+          })}
+        </Marquee>
+
+        {/* Marquee 2: Hiring Companies Track (Reverse Direction) */}
+        <Marquee speed="35s" reverse={true} pauseOnHover={true}>
+          {['GOOGLE', 'MICROSOFT', 'AMAZON', 'FLIPKART', 'RAZORPAY', 'SWIGGY', 'TCS', 'INFOSYS', 'CRED', 'PAYTM'].map((brand, i) => (
+            <div key={i} className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-100 dark:bg-navy-900/50 border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 font-bold text-xs">
+              <Building2 className="w-4 h-4 text-brand-indigo" />
+              <span>{brand}</span>
+            </div>
+          ))}
+        </Marquee>
       </section>
 
-      {/* PROMPT FEATURES SECTION: BENTO BOX GRID LAYOUT WITH HOVER SPOTLIGHT */}
+      {/* INTERACTIVE DOMAIN EXPLORER */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <h2 className="text-xs font-bold text-brand-indigo dark:text-brand-cyan tracking-widest uppercase mb-2">
+            Specialized Career Tracks
+          </h2>
+          <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+            Choose Your High-Growth Domain
+          </h3>
+          <p className="mt-3 text-slate-600 dark:text-slate-400 text-sm">
+            Select a technology track below to view active internship stipends, hiring trends, and required skills.
+          </p>
+        </div>
+
+        {/* Domain Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+          {domains.map((domain, idx) => {
+            const Icon = domain.icon;
+            const isSelected = activeDomainIndex === idx;
+            return (
+              <button
+                key={idx}
+                onClick={() => setActiveDomainIndex(idx)}
+                className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-2.5 ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-brand-indigo to-brand-blue text-white shadow-glow-indigo scale-105'
+                    : 'bg-slate-100 dark:bg-navy-900/80 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10'
+                }`}
+              >
+                <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-brand-indigo dark:text-brand-cyan'}`} />
+                <span>{domain.title}</span>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-extrabold ${
+                  isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-navy-800 text-brand-indigo dark:text-brand-cyan'
+                }`}>
+                  {domain.badge}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Active Domain Spotlight Card */}
+        <motion.div 
+          key={activeDomainIndex}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="glass-panel p-8 rounded-3xl relative overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-50/90 dark:bg-navy-900/80"
+        >
+          <div className="absolute -right-10 -bottom-10 w-80 h-80 bg-brand-indigo/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
+                <TrendingUp className="w-3.5 h-3.5" />
+                <span>Industry Trend: {domains[activeDomainIndex].growth}</span>
+              </div>
+              <h4 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                {domains[activeDomainIndex].title} Industry Track
+              </h4>
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                Work directly on live client deliverables under 1-on-1 engineering mentors. Gain production experience with modern tech stacks, automated testing, and cloud deployment pipelines.
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
+                <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Stipend Range</span>
+                  <span className="text-sm font-bold text-brand-indigo dark:text-brand-cyan">{domains[activeDomainIndex].stipend}</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Duration</span>
+                  <span className="text-sm font-bold text-slate-800 dark:text-slate-200">3 - 6 Months</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white dark:bg-navy-950/80 border border-slate-200 dark:border-white/5">
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Perks Included</span>
+                  <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">Offer Letter + LOR</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-white/10 space-y-4 text-center bg-white/80 dark:bg-navy-900/90">
+              <div className="w-12 h-12 mx-auto rounded-xl bg-brand-indigo/20 flex items-center justify-center text-brand-indigo dark:text-brand-cyan">
+                <Award className="w-6 h-6" />
+              </div>
+              <h5 className="text-slate-900 dark:text-white font-bold text-base">Ready to start?</h5>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Applications reviewed within 24 hours. Early bird spots available.
+              </p>
+              <Button
+                variant="primary"
+                size="md"
+                className="w-full"
+                onClick={() => setActiveTab('internships')}
+              >
+                Browse {domains[activeDomainIndex].title} Roles
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+
+      </section>
+
+      {/* FEATURES BENTO BOX SECTION */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs font-bold text-brand-indigo dark:text-brand-cyan tracking-widest uppercase mb-2">
+          <h2 className="text-xs font-bold text-brand-indigo tracking-widest uppercase mb-2">
             The Navyan Ecosystem
           </h2>
           <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
@@ -361,7 +500,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </h3>
         </div>
 
-        {/* Bento Box CSS Grid with Framer Motion Entrance Stagger (viewport once: true) */}
+        {/* Bento Box CSS Grid */}
         <motion.div 
           variants={bentoGridStagger}
           initial="hidden"
@@ -369,8 +508,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           viewport={{ once: true, margin: '-50px' }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          
-          {/* Card 1: Verified Internships (Spans 2 columns on desktop) */}
+          {/* Card 1: Verified Internships */}
           <BentoCard
             icon={Briefcase}
             title="Verified Industry Internships"
@@ -378,7 +516,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             tag="Guaranteed Stipend"
             colSpan="md:col-span-2"
           >
-            {/* Embedded Ambient Haikei Blob Glow */}
             <img
               src="/blob.svg"
               alt="Ambient Glow"
@@ -420,7 +557,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             </div>
           </BentoCard>
 
-          {/* Card 4: Career Growth & PPO Track (Spans 2 columns on desktop) */}
+          {/* Card 4: Career Growth */}
           <BentoCard
             icon={TrendingUp}
             title="Accelerated Career Growth & PPO Track"
@@ -443,7 +580,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               </div>
             </div>
           </BentoCard>
-
         </motion.div>
 
         {/* Seamless Layered Wave Section Divider */}
