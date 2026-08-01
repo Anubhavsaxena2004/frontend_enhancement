@@ -80,7 +80,6 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
     });
   };
 
-  // Alternating Left / Right Slide-In Animation based on Index
   const isEven = index % 2 === 0;
 
   return (
@@ -158,6 +157,8 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
     { name: 'MongoDB', type: 'NoSQL Database', color: 'text-emerald-600 dark:text-emerald-500', icon: Database },
   ];
 
+  const hiringCompanies = ['GOOGLE', 'MICROSOFT', 'AMAZON', 'FLIPKART', 'RAZORPAY', 'SWIGGY', 'TCS', 'INFOSYS', 'CRED', 'PAYTM'];
+
   const handleQuickVerify = (e) => {
     e.preventDefault();
     if (!quickVerifyInput.trim()) return;
@@ -227,7 +228,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             Accelerate your career through hands-on industry internships with guaranteed stipends, production mentorship, and enterprise IT engineering solutions.
           </motion.p>
 
-          {/* Humanized Buttons (Slate/White Token & Glassmorphism Outline) */}
+          {/* Humanized Buttons */}
           <motion.div 
             variants={fadeInUpOnce}
             initial="hidden"
@@ -286,7 +287,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             </Button>
           </motion.div>
 
-          {/* INCREASING NUMBER COUNT-UP ANIMATION IN IMPACT STATS */}
+          {/* IMPACT STATS WITH NUMBER COUNT-UP */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -330,14 +331,15 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* INFINITE MARQUEE TECH STACK SECTION */}
+      {/* DUAL INFINITE MARQUEE TRACKS: TRACK 1 TECH STACK & TRACK 2 REVERSE HIRING COMPANIES */}
       <section className="border-y border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-navy-950/60 py-10 overflow-hidden space-y-6">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-            Technologies We Teach & Enterprise Tech Partners
+            Technologies We Teach & Enterprise Hiring Partners
           </p>
         </div>
 
+        {/* Marquee Track 1: Technologies Badge Track (Left to Right) */}
         <Marquee speed="30s" pauseOnHover={true}>
           {technologies.map((tech, idx) => {
             const Icon = tech.icon;
@@ -356,6 +358,16 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               </div>
             );
           })}
+        </Marquee>
+
+        {/* Marquee Track 2: Hiring Companies Track (Reverse Right to Left) */}
+        <Marquee speed="35s" reverse={true} pauseOnHover={true}>
+          {hiringCompanies.map((brand, i) => (
+            <div key={i} className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-slate-50 dark:bg-navy-900/60 border border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-slate-300 font-extrabold text-xs shadow-sm">
+              <Building2 className="w-4 h-4 text-slate-900 dark:text-white shrink-0" />
+              <span>{brand}</span>
+            </div>
+          ))}
         </Marquee>
       </section>
 
@@ -450,7 +462,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </motion.div>
       </section>
 
-      {/* BENTO GRID FEATURES WITH ALTERNATING LEFT/RIGHT SLIDE-IN */}
+      {/* BENTO GRID FEATURES */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase mb-2">
@@ -461,7 +473,6 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </h3>
         </div>
 
-        {/* Bento Grid layout with alternating Left/Right slide-in cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <BentoCard
             index={0}
@@ -611,7 +622,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* STUDENT TESTIMONIALS WITH ALTERNATING SLIDE-IN CARDS */}
+      {/* STUDENT TESTIMONIALS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-widest uppercase mb-2">
@@ -660,7 +671,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* ADAPTIVE WAVE DIVIDER: NO BLACK CRACKS IN LIGHT MODE! */}
+      {/* ADAPTIVE WAVE DIVIDER: NO BLACK CRACKS IN LIGHT MODE */}
       <div className="w-full overflow-hidden leading-none text-slate-50 dark:text-navy-950 transition-colors">
         <svg
           className="relative block w-full h-12 md:h-20 fill-current"
@@ -671,7 +682,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </svg>
       </div>
 
-      {/* FINAL CALL-TO-ACTION SECTION */}
+      {/* FINAL CALL-TO-ACTION SECTION WITH HIGH-CONTRAST LEGIBLE BUTTONS */}
       <section className="relative w-full pt-0 pb-16">
         <div className="bg-slate-900 dark:bg-navy-900 text-white py-16 sm:py-24 relative overflow-hidden">
           
@@ -704,25 +715,22 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <Button
-                variant="primary"
-                size="lg"
-                magnetic={true}
-                icon={ArrowRight}
+              {/* Primary CTA Button: Crisp Solid White Button with Black Text */}
+              <button
                 onClick={onOpenAuth}
-                className="bg-white text-slate-900 hover:bg-slate-100 border-white text-base py-3.5 px-8"
+                className="px-8 py-3.5 rounded-2xl bg-white text-slate-900 hover:bg-slate-100 font-extrabold text-sm sm:text-base shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
               >
-                Join Navyan Today
-              </Button>
+                <span>Join Navyan Today</span>
+                <ArrowRight className="w-4 h-4 text-slate-900" />
+              </button>
 
-              <Button
-                variant="secondary"
-                size="lg"
+              {/* Secondary CTA Button: Crisp Translucent Glass Outline with White Text */}
+              <button
                 onClick={() => setActiveTab('internships')}
-                className="border-white/20 bg-white/10 text-white hover:bg-white/20"
+                className="px-8 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md font-semibold text-sm sm:text-base transition-all"
               >
                 Browse All Internships
-              </Button>
+              </button>
             </motion.div>
 
           </div>
