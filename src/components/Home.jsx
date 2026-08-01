@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { Button } from './ui/Button';
 import { 
   Sparkles, 
   ArrowRight, 
@@ -22,26 +23,40 @@ import {
 } from 'lucide-react';
 import { MOCK_INTERNSHIPS, MOCK_TESTIMONIALS, MOCK_SERVICES } from '../data/mockData';
 
-// Framer Motion Micro-Interaction Variants (Motion Primitives Philosophy)
-const fadeInUp = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] } }
-};
+// Motion Primitives - Staggered Word Reveal for Headline (viewport once: true)
+const headlineText = "Launch Your IT Career with Navyan.";
 
-const staggerContainer = {
+const sentenceContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.08,
       delayChildren: 0.1
     }
   }
 };
 
-const scaleHover = {
-  rest: { scale: 1 },
-  hover: { scale: 1.02, transition: { type: 'spring', stiffness: 400, damping: 25 } }
+const wordVariant = {
+  hidden: { opacity: 0, y: 25, filter: 'blur(8px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.6,
+      ease: [0.21, 0.47, 0.32, 0.98]
+    }
+  }
+};
+
+const fadeInUpOnce = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.5, ease: 'easeOut' } 
+  }
 };
 
 export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
@@ -68,67 +83,110 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
       {/* HERO SECTION */}
       <section className="relative min-h-[90vh] pt-32 pb-20 flex items-center justify-center overflow-hidden">
         
-        {/* Haikei Hero Background SVG Glow */}
+        {/* Background SVG Blob with Soft Opacity and Mix-Blend-Mode */}
+        <img
+          src="/blob.svg"
+          alt="Background Blob Visual"
+          className="absolute -top-10 left-1/2 -translate-x-1/2 w-full max-w-5xl opacity-30 dark:opacity-40 mix-blend-screen pointer-events-none -z-10 blur-3xl"
+        />
+
+        {/* Haikei Blurry Gradient Secondary Background */}
         <img
           src="/blurry-gradient.svg"
-          alt="Blurry Gradient Background"
-          className="absolute -top-20 left-1/2 -translate-x-1/2 w-full max-w-5xl opacity-30 dark:opacity-40 blur-3xl pointer-events-none -z-10"
+          alt="Blurry Gradient Glow"
+          className="absolute -top-20 left-1/2 -translate-x-1/2 w-full max-w-4xl opacity-25 dark:opacity-35 mix-blend-plus-lighter pointer-events-none -z-20 blur-3xl"
         />
 
         {/* Subtle Radial Grid Mask Overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(#6366f1_1px,transparent_1px)] dark:bg-[radial-gradient(#2563eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none -z-10" />
 
-        <motion.div 
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center"
-        >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           
           {/* Top Pill Announcement */}
-          <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-navy-900/90 border border-indigo-200 dark:border-brand-indigo/40 text-xs font-semibold text-brand-indigo dark:text-brand-cyan shadow-sm dark:shadow-glow-indigo mb-8 animate-float">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-navy-900/90 border border-indigo-200 dark:border-brand-indigo/40 text-xs font-semibold text-brand-indigo dark:text-brand-cyan shadow-sm dark:shadow-glow-indigo mb-8 animate-float"
+          >
             <span className="flex h-2 w-2 rounded-full bg-brand-indigo dark:bg-brand-cyan animate-ping" />
             <Sparkles className="w-3.5 h-3.5 text-brand-indigo dark:text-brand-cyan" />
             <span>Navyan Batch 2026 Internships Now Open • Guaranteed Stipends</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </motion.div>
 
-          {/* Headline Text with Motion Primitives Fade-In-Up */}
+          {/* Staggered Text-Reveal Animation for Headline */}
           <motion.h1
-            variants={fadeInUp}
-            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-5xl mx-auto leading-[1.15]"
+            variants={sentenceContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-5xl mx-auto leading-[1.15] flex flex-wrap justify-center gap-x-3 gap-y-2"
           >
-            Bridge Academic Learning with <br className="hidden sm:inline" />
-            <span className="gradient-text-primary">Real High-Tech Execution</span>
+            {headlineText.split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                variants={wordVariant}
+                className={word.includes("Navyan") || word.includes("IT") ? "gradient-text-primary" : ""}
+              >
+                {word}
+              </motion.span>
+            ))}
           </motion.h1>
 
           {/* Subtext */}
-          <motion.p variants={fadeInUp} className="mt-6 text-base sm:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
+          <motion.p 
+            variants={fadeInUpOnce}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="mt-6 text-base sm:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed"
+          >
             Accelerate your career through hands-on industry internships with guaranteed stipends, production mentorship, and enterprise IT engineering solutions.
           </motion.p>
 
-          {/* CTA Buttons */}
-          <motion.div variants={fadeInUp} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
+          {/* Buttons using Reusable <Button> Component */}
+          <motion.div 
+            variants={fadeInUpOnce}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            {/* Primary Button with Magnetic Scale-Up Hover */}
+            <Button
+              variant="primary"
+              size="lg"
+              magnetic={true}
+              icon={ArrowRight}
               onClick={() => setActiveTab('internships')}
-              className="w-full sm:w-auto gradient-btn px-8 py-4 rounded-2xl text-white font-bold text-base shadow-glow-indigo flex items-center justify-center gap-3 group transition-transform active:scale-95"
             >
-              <Briefcase className="w-5 h-5 text-white group-hover:rotate-12 transition-transform" />
-              <span>Explore Internships</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+              Explore Internships
+            </Button>
 
-            <button
+            {/* Secondary Ghost Button */}
+            <Button
+              variant="ghost"
+              size="lg"
+              icon={Code2}
               onClick={() => setActiveTab('services')}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-navy-900/80 dark:hover:bg-navy-850 text-slate-900 dark:text-white font-bold text-base border border-slate-300 dark:border-white/10 hover:border-brand-indigo/50 transition-all flex items-center justify-center gap-3"
             >
-              <Code2 className="w-5 h-5 text-brand-indigo dark:text-brand-cyan" />
-              <span>Estimate IT Project Cost</span>
-            </button>
+              Estimate IT Project Cost
+            </Button>
           </motion.div>
 
           {/* Verification Bar Teaser */}
-          <motion.div variants={fadeInUp} className="mt-12 max-w-xl mx-auto p-2.5 rounded-2xl bg-white/80 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 backdrop-blur-xl shadow-glass-card flex items-center gap-2">
+          <motion.div 
+            variants={fadeInUpOnce}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="mt-12 max-w-xl mx-auto p-2.5 rounded-2xl bg-white/80 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 backdrop-blur-xl shadow-glass-card flex items-center gap-2"
+          >
             <div className="pl-3 flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs shrink-0">
               <ShieldCheck className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
               <span className="hidden sm:inline">Verify Credential:</span>
@@ -149,7 +207,13 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           </motion.div>
 
           {/* Dynamic Platform Metric Counters */}
-          <motion.div variants={fadeInUp} className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+          >
             {[
               { label: 'Interns Trained & Placed', value: '15,000+', icon: Users, color: 'text-brand-indigo dark:text-brand-cyan' },
               { label: 'PPO Placement Rate', value: '98.4%', icon: TrendingUp, color: 'text-emerald-600 dark:text-emerald-400' },
@@ -178,7 +242,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             })}
           </motion.div>
 
-        </motion.div>
+        </div>
       </section>
 
       {/* MARQUEE BRAND TRUST BANNER */}
@@ -288,13 +352,14 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Applications reviewed within 24 hours. Early bird spots available.
               </p>
-              <button
+              <Button
+                variant="primary"
+                size="md"
+                className="w-full"
                 onClick={() => setActiveTab('internships')}
-                className="w-full gradient-btn py-3 rounded-xl text-white font-bold text-xs shadow-glow-indigo flex items-center justify-center gap-2"
               >
-                <span>Browse {domains[activeDomainIndex].title} Roles</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+                Browse {domains[activeDomainIndex].title} Roles
+              </Button>
             </div>
           </div>
         </motion.div>
@@ -304,7 +369,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
       {/* BENTO GRID CARDS WITH MICRO-GLOW */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs font-bold text-brand-indigo dark:text-brand-indigo tracking-widest uppercase mb-2">
+          <h2 className="text-xs font-bold text-brand-indigo tracking-widest uppercase mb-2">
             The Navyan Advantage
           </h2>
           <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
@@ -318,6 +383,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           {/* Primary Feature Card with Haikei blob glow */}
           <motion.div 
             whileHover={{ y: -4 }}
+            viewport={{ once: true }}
             transition={{ type: 'spring', stiffness: 300 }}
             className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/5 backdrop-blur-xl p-8 hover:border-primary/40 transition-all duration-300 group"
           >
@@ -343,6 +409,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           {/* Secondary Card 1 */}
           <motion.div 
             whileHover={{ y: -4 }}
+            viewport={{ once: true }}
             transition={{ type: 'spring', stiffness: 300 }}
             className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/5 backdrop-blur-xl p-8 hover:border-primary/40 transition-all duration-300 group"
           >
@@ -362,6 +429,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           {/* Secondary Card 2 */}
           <motion.div 
             whileHover={{ y: -4 }}
+            viewport={{ once: true }}
             transition={{ type: 'spring', stiffness: 300 }}
             className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/5 backdrop-blur-xl p-8 hover:border-primary/40 transition-all duration-300 group"
           >
@@ -426,6 +494,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             <motion.div 
               key={item.id} 
               whileHover={{ y: -4 }}
+              viewport={{ once: true }}
               transition={{ type: 'spring', stiffness: 300 }}
               className="glass-panel p-6 rounded-2xl bg-white/80 dark:bg-navy-900/70 border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4"
             >
@@ -490,6 +559,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             <motion.div 
               key={t.id} 
               whileHover={{ y: -4 }}
+              viewport={{ once: true }}
               transition={{ type: 'spring', stiffness: 300 }}
               className="glass-panel p-6 rounded-2xl bg-white/80 dark:bg-navy-900/70 border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4"
             >
@@ -531,18 +601,22 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               Join over 15,000 students building production code and earning verified certificates. Applications close soon for the upcoming batch.
             </p>
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
+              <Button
+                variant="primary"
+                size="lg"
                 onClick={() => setActiveTab('internships')}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-navy-950 text-white font-bold text-sm hover:bg-navy-900 transition-colors shadow-2xl"
+                className="bg-navy-950 text-white hover:bg-navy-900"
               >
                 Apply for Internships
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
+                size="lg"
                 onClick={onOpenAuth}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-sm transition-colors border border-white/30"
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white border border-white/30"
               >
                 Create Student Account
-              </button>
+              </Button>
             </div>
           </div>
         </div>
