@@ -52,8 +52,13 @@
   }
 
   html {
+    /* Smooth only on desktop — mobile smooth scroll causes lag */
     scroll-behavior: smooth;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    /* Tell browser to optimize text rendering */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
@@ -132,6 +137,9 @@
   display: flex;
   width: max-content;
   animation: marquee 30s linear infinite;
+  /* GPU-accelerated: promotes to own compositing layer */
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .animate-marquee.direction-reverse {
@@ -142,20 +150,37 @@
   animation-play-state: paused;
 }
 
-/* Custom Scrollbar */
+/* GPU compositing hint for Framer Motion animated cards */
+.motion-card {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reduce repaints: fix scrollbar track to adapt to theme */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #060A12;
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
+  background: var(--line-border);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #6366F1;
+}
+
+/* Honor user's reduced motion preference for accessibility & performance */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -32,6 +32,7 @@ import {
 import { MOCK_INTERNSHIPS, MOCK_TESTIMONIALS, MOCK_SERVICES } from '../data/mockData';
 
 // Headline Stagger Variant (viewport once: true)
+// PERFORMANCE: No blur filter — GPU-expensive on many elements simultaneously
 const headlineText = "Launch Your IT Career with Navyan.";
 
 const sentenceContainer = {
@@ -39,31 +40,31 @@ const sentenceContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1
+      staggerChildren: 0.055,
+      delayChildren: 0.05
     }
   }
 };
 
+// PERF: Removed filter:blur — it forces GPU compositing on EVERY word simultaneously
 const wordVariant = {
-  hidden: { opacity: 0, y: 25, filter: 'blur(8px)' },
+  hidden: { opacity: 0, y: 18 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
-      duration: 0.6,
+      duration: 0.45,
       ease: [0.21, 0.47, 0.32, 0.98]
     }
   }
 };
 
 const fadeInUpOnce = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 16 },
   visible: { 
     opacity: 1, 
     y: 0, 
-    transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] } 
+    transition: { duration: 0.45, ease: [0.21, 0.47, 0.32, 0.98] } 
   }
 };
 
@@ -84,15 +85,15 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: isEven ? -60 : 60 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ type: 'spring', stiffness: 70, damping: 18, delay: (index % 3) * 0.1 }}
-      whileHover={{ y: -4 }}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.45, ease: [0.21, 0.47, 0.32, 0.98], delay: (index % 3) * 0.08 }}
+      whileHover={{ y: -3 }}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur-xl p-8 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-300 group ${colSpan} ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-white/10 bg-white/90 dark:bg-white/5 p-8 hover:border-slate-300 dark:hover:border-white/20 transition-colors duration-300 group ${colSpan} ${className}`}
     >
       {/* Soft Radial Cursor Spotlight */}
       {isHovered && (
@@ -569,11 +570,11 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           {MOCK_INTERNSHIPS.slice(0, 3).map((item, idx) => (
             <motion.div 
               key={item.id} 
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -60 : 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ type: 'spring', stiffness: 70, damping: 18, delay: idx * 0.1 }}
-              whileHover={{ y: -4 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.4, ease: 'easeOut', delay: idx * 0.08 }}
+              whileHover={{ y: -3 }}
               className="p-6 rounded-2xl bg-white/90 dark:bg-navy-900/70 border border-slate-200/80 dark:border-white/10 flex flex-col justify-between space-y-4 shadow-sm"
             >
               <div>
@@ -637,11 +638,11 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
           {MOCK_TESTIMONIALS.map((t, idx) => (
             <motion.div 
               key={t.id} 
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -60 : 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ type: 'spring', stiffness: 70, damping: 18, delay: idx * 0.1 }}
-              whileHover={{ y: -4 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.4, ease: 'easeOut', delay: idx * 0.08 }}
+              whileHover={{ y: -3 }}
               className="p-6 rounded-2xl bg-white/90 dark:bg-navy-900/70 border border-slate-200/80 dark:border-white/10 flex flex-col justify-between space-y-4 shadow-sm"
             >
               <div className="space-y-3">

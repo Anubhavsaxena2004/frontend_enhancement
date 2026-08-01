@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from './ui/Button';
 import { 
   GraduationCap, 
   Search, 
@@ -58,24 +60,24 @@ export default function Internships({ selectedInternship, setSelectedInternship,
   };
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 transition-colors duration-300">
       
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-indigo/20 text-brand-cyan text-xs font-semibold border border-brand-indigo/30">
-          <GraduationCap className="w-4 h-4" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-navy-900/90 text-slate-800 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-white/10 shadow-sm">
+          <GraduationCap className="w-4 h-4 text-slate-900 dark:text-white" />
           <span>Verified Industry Internships • Guaranteed Stipends</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white">
-          Explore Active <span className="gradient-text-primary">Internship Tracks</span>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white">
+          Explore Active <span className="text-slate-900 dark:text-white font-extrabold underline decoration-slate-400">Internship Tracks</span>
         </h1>
-        <p className="text-slate-300 text-sm leading-relaxed">
+        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
           Gain real-world experience, build production projects with 1-on-1 industry mentors, and earn verifiable credentials and PPO opportunities.
         </p>
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="glass-panel p-6 rounded-3xl space-y-4 border border-white/10">
+      <div className="p-6 rounded-3xl space-y-4 bg-white/90 dark:bg-navy-900/80 border border-slate-200/80 dark:border-white/10 backdrop-blur-xl shadow-sm">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           
           {/* Search Bar */}
@@ -86,14 +88,14 @@ export default function Internships({ selectedInternship, setSelectedInternship,
               placeholder="Search by role or tech stack (e.g. React, Python)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-navy-950/80 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-brand-indigo"
+              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-slate-400"
             />
           </div>
 
           {/* Mode Selector Buttons */}
-          <div className="flex items-center gap-2 bg-navy-950/80 p-1.5 rounded-2xl border border-white/10 self-start md:self-auto">
-            <span className="text-[11px] text-slate-400 px-2 font-semibold flex items-center gap-1">
-              <Filter className="w-3 h-3 text-brand-cyan" />
+          <div className="flex items-center gap-2 bg-slate-100 dark:bg-navy-950/80 p-1.5 rounded-2xl border border-slate-200 dark:border-white/10 self-start md:self-auto">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 px-2 font-semibold flex items-center gap-1">
+              <Filter className="w-3 h-3 text-slate-700 dark:text-slate-300" />
               Mode:
             </span>
             {modes.map(mode => (
@@ -102,8 +104,8 @@ export default function Internships({ selectedInternship, setSelectedInternship,
                 onClick={() => setSelectedMode(mode)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   selectedMode === mode
-                    ? 'bg-brand-indigo text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {mode}
@@ -122,8 +124,8 @@ export default function Internships({ selectedInternship, setSelectedInternship,
               onClick={() => setSelectedDomain(dom)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
                 selectedDomain === dom
-                  ? 'bg-gradient-to-r from-brand-indigo to-brand-blue text-white shadow-glow-indigo'
-                  : 'bg-navy-900/80 text-slate-400 border border-white/5 hover:text-white hover:border-brand-indigo/40'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
+                  : 'bg-slate-100 dark:bg-navy-900/80 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/5 hover:bg-slate-200 dark:hover:bg-navy-800'
               }`}
             >
               {dom}
@@ -132,40 +134,45 @@ export default function Internships({ selectedInternship, setSelectedInternship,
         </div>
       </div>
 
-      {/* Internships Grid */}
+      {/* Internships Grid with Alternating Left/Right Slide-In Animations */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredInternships.map(item => (
-          <div 
+        {filteredInternships.map((item, idx) => (
+          <motion.div 
             key={item.id}
-            className="glass-panel p-6 rounded-3xl glass-panel-hover flex flex-col justify-between space-y-5 border border-white/10 relative overflow-hidden group"
+            initial={{ opacity: 0, x: idx % 2 === 0 ? -60 : 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ type: 'spring', stiffness: 70, damping: 18, delay: (idx % 3) * 0.1 }}
+            whileHover={{ y: -4 }}
+            className="p-6 rounded-3xl bg-white/90 dark:bg-navy-900/70 backdrop-blur-xl flex flex-col justify-between space-y-5 border border-slate-200/80 dark:border-white/10 relative overflow-hidden group shadow-sm"
           >
             {/* Top Badge */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-extrabold px-3 py-1 rounded-full bg-brand-indigo/20 text-brand-cyan border border-brand-indigo/30 uppercase tracking-wider">
+                <span className="text-[10px] font-extrabold px-3 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 uppercase tracking-wider">
                   {item.domain}
                 </span>
-                <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                   {item.spotsLeft} Openings
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold text-white group-hover:text-brand-cyan transition-colors">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white transition-colors">
                 {item.title}
               </h3>
-              <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5 text-brand-indigo" />
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
                 {item.company} • <MapPin className="w-3 h-3 text-slate-400 inline ml-1" /> {item.mode}
               </p>
 
-              <p className="mt-3 text-xs text-slate-300 line-clamp-3 leading-relaxed">
+              <p className="mt-3 text-xs text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
                 {item.description}
               </p>
 
               {/* Skill Tags */}
               <div className="flex flex-wrap gap-1.5 mt-4">
                 {item.skills.map((skill, sIdx) => (
-                  <span key={sIdx} className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-navy-900/90 text-slate-300 border border-white/5">
+                  <span key={sIdx} className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-navy-950 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/5">
                     {skill}
                   </span>
                 ))}
@@ -173,123 +180,114 @@ export default function Internships({ selectedInternship, setSelectedInternship,
             </div>
 
             {/* Bottom Meta & CTAs */}
-            <div className="pt-4 border-t border-white/10 space-y-4">
+            <div className="pt-4 border-t border-slate-200/80 dark:border-white/10 space-y-4">
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
                   <span className="text-[10px] text-slate-500 block uppercase">Stipend</span>
-                  <span className="font-extrabold text-brand-cyan">{item.stipend}</span>
+                  <span className="font-extrabold text-slate-900 dark:text-white">{item.stipend}</span>
                 </div>
                 <div>
                   <span className="text-[10px] text-slate-500 block uppercase">Batch Starts</span>
-                  <span className="font-semibold text-slate-300">{item.batchStartDate}</span>
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">{item.batchStartDate}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <button
+                <Button
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setSelectedInternship(item)}
-                  className="flex-1 py-2.5 rounded-xl bg-navy-850 hover:bg-navy-800 text-slate-200 font-semibold text-xs border border-white/10 transition-colors"
+                  className="flex-1"
                 >
                   View Details
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={() => {
                     setSelectedInternship(item);
                     setApplyModalOpen(true);
                   }}
-                  className="flex-1 gradient-btn py-2.5 rounded-xl text-white font-bold text-xs shadow-glow-indigo flex items-center justify-center gap-1"
+                  className="flex-1"
                 >
-                  <span>Apply Now</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                  Apply Now
+                </Button>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      {/* DETAIL MODAL / DRAWER */}
+      {/* DETAIL MODAL */}
       {selectedInternship && !applyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/80 backdrop-blur-md animate-fadeIn">
-          <div className="bg-navy-900 border border-white/10 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-navy-950/80 backdrop-blur-md animate-fadeIn">
+          <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-white/10 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl relative text-slate-900 dark:text-white">
             
             <button
               onClick={() => setSelectedInternship(null)}
-              className="absolute top-6 right-6 p-2 rounded-xl bg-navy-850 hover:bg-white/10 text-slate-400 hover:text-white"
+              className="absolute top-6 right-6 p-2 rounded-xl bg-slate-100 dark:bg-navy-850 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="space-y-2">
-              <span className="text-xs font-bold text-brand-cyan uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 {selectedInternship.domain} • {selectedInternship.mode}
               </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
                 {selectedInternship.title}
               </h2>
-              <p className="text-xs text-slate-400 flex items-center gap-2">
+              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
                 <span>Offered by {selectedInternship.company}</span>
                 <span>•</span>
-                <span className="text-emerald-400 font-semibold">{selectedInternship.spotsLeft} Open Spots</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{selectedInternship.spotsLeft} Open Spots</span>
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-navy-950/70 border border-white/5 grid grid-cols-3 gap-4 text-center">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-navy-950/70 border border-slate-200 dark:border-white/5 grid grid-cols-3 gap-4 text-center">
               <div>
-                <span className="text-[10px] text-slate-400 uppercase block">Stipend</span>
-                <span className="text-sm font-bold text-brand-cyan">{selectedInternship.stipend}</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase block">Stipend</span>
+                <span className="text-sm font-bold text-slate-900 dark:text-white">{selectedInternship.stipend}</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-400 uppercase block">Duration</span>
-                <span className="text-sm font-bold text-slate-200">{selectedInternship.duration}</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase block">Duration</span>
+                <span className="text-sm font-bold text-slate-800 dark:text-slate-200">{selectedInternship.duration}</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-400 uppercase block">Start Date</span>
-                <span className="text-sm font-bold text-slate-200">{selectedInternship.batchStartDate}</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase block">Start Date</span>
+                <span className="text-sm font-bold text-slate-800 dark:text-slate-200">{selectedInternship.batchStartDate}</span>
               </div>
             </div>
 
             {/* Description */}
             <div>
-              <h4 className="text-sm font-bold text-white mb-2">Program Overview</h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">Program Overview</h4>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 {selectedInternship.description}
               </p>
             </div>
 
             {/* Perks */}
             <div>
-              <h4 className="text-sm font-bold text-white mb-3">Included Benefits & Perks</h4>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-3">Included Benefits & Perks</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 {selectedInternship.perks.map((perk, pIdx) => (
-                  <div key={pIdx} className="flex items-center gap-2 text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <div key={pIdx} className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>{perk}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Required Skills */}
-            <div>
-              <h4 className="text-sm font-bold text-white mb-2">Key Competencies & Prerequisites</h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedInternship.requirements.map((req, rIdx) => (
-                  <span key={rIdx} className="text-xs px-3 py-1 rounded-xl bg-navy-850 text-slate-300 border border-white/5">
-                    {req}
-                  </span>
-                ))}
-              </div>
-            </div>
-
             {/* Plan Selector */}
-            <div className="p-5 rounded-2xl bg-navy-950 border border-brand-indigo/30 space-y-3">
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-white/10 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-amber-500" />
                   Select Internship Track Tier:
                 </span>
-                <span className="text-[10px] text-brand-cyan font-semibold">100% Money-back Guarantee</span>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">100% Money-back Guarantee</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -297,129 +295,133 @@ export default function Internships({ selectedInternship, setSelectedInternship,
                   onClick={() => setFormState({ ...formState, planTier: 'standard' })}
                   className={`p-3 rounded-xl border text-left transition-all ${
                     formState.planTier === 'standard'
-                      ? 'bg-brand-indigo/20 border-brand-indigo text-white'
-                      : 'bg-navy-900 border-white/10 text-slate-400 hover:border-white/20'
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold'
+                      : 'bg-white dark:bg-navy-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   <div className="font-bold text-xs">Standard Track (Free)</div>
-                  <div className="text-[10px] text-slate-400 mt-1">Self-paced live tasks + Verified Certificate</div>
+                  <div className="text-[10px] opacity-80 mt-1">Self-paced live tasks + Verified Certificate</div>
                 </button>
 
                 <button
                   onClick={() => setFormState({ ...formState, planTier: 'mentorship' })}
                   className={`p-3 rounded-xl border text-left transition-all ${
                     formState.planTier === 'mentorship'
-                      ? 'bg-brand-indigo/30 border-brand-cyan text-white shadow-glow-indigo'
-                      : 'bg-navy-900 border-white/10 text-slate-400 hover:border-white/20'
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white font-bold shadow-sm'
+                      : 'bg-white dark:bg-navy-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   <div className="font-bold text-xs flex items-center justify-between">
                     <span>1-on-1 Mentorship Track</span>
-                    <span className="text-[9px] bg-brand-cyan text-navy-950 font-bold px-1.5 py-0.5 rounded">RECOMMENDED</span>
+                    <span className="text-[9px] bg-emerald-500 text-white font-bold px-1.5 py-0.5 rounded">RECOMMENDED</span>
                   </div>
-                  <div className="text-[10px] text-slate-300 mt-1">Direct Code Reviews + Day-1 Offer Letter + PPO Fast Track</div>
+                  <div className="text-[10px] opacity-80 mt-1">Direct Code Reviews + Day-1 Offer Letter + PPO Fast Track</div>
                 </button>
               </div>
             </div>
 
             {/* Modal Action Buttons */}
             <div className="flex items-center gap-3 pt-2">
-              <button
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={() => setSelectedInternship(null)}
-                className="w-1/3 py-3 rounded-xl bg-navy-850 hover:bg-navy-800 text-slate-300 font-bold text-xs border border-white/10"
+                className="w-1/3"
               >
                 Close
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                icon={ArrowRight}
                 onClick={() => setApplyModalOpen(true)}
-                className="w-2/3 gradient-btn py-3 rounded-xl text-white font-bold text-xs shadow-glow-indigo flex items-center justify-center gap-2"
+                className="w-2/3"
               >
-                <span>Proceed to Apply</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+                Proceed to Apply
+              </Button>
             </div>
 
           </div>
         </div>
       )}
 
-      {/* APPLICATION MODAL FORM */}
+      {/* APPLICATION FORM MODAL */}
       {selectedInternship && applyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/85 backdrop-blur-md animate-fadeIn">
-          <div className="bg-navy-900 border border-white/10 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-navy-950/85 backdrop-blur-md animate-fadeIn">
+          <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-white/10 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative text-slate-900 dark:text-white">
             
             <button
               onClick={() => setApplyModalOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-xl bg-navy-850 text-slate-400 hover:text-white"
+              className="absolute top-6 right-6 p-2 rounded-xl bg-slate-100 dark:bg-navy-850 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div>
-              <span className="text-xs font-bold text-brand-cyan uppercase tracking-wider">Step 2 of 2 • Fast-Track Application</span>
-              <h3 className="text-2xl font-bold text-white mt-1">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Step 2 of 2 • Fast-Track Application</span>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                 Apply for {selectedInternship.title}
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 Fill in your candidate details to generate your screening invitation.
               </p>
             </div>
 
             <form onSubmit={handleApplySubmit} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Full Legal Name *</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Full Legal Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Ananya Sharma"
                   value={formState.fullName}
                   onChange={(e) => setFormState({ ...formState, fullName: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-indigo"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-slate-400"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Email Address *</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Email Address *</label>
                   <input
                     type="email"
                     required
                     placeholder="student@college.edu"
                     value={formState.email}
                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-indigo"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-slate-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Phone / WhatsApp *</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Phone / WhatsApp *</label>
                   <input
                     type="tel"
                     required
                     placeholder="+91 98765 43210"
                     value={formState.phone}
                     onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-indigo"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-slate-400"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">College / University</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">College / University</label>
                   <input
                     type="text"
                     placeholder="e.g. VIT Vellore / IIT Delhi"
                     value={formState.college}
                     onChange={(e) => setFormState({ ...formState, college: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-indigo"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-slate-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Graduation Year</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Graduation Year</label>
                   <select
                     value={formState.graduationYear}
                     onChange={(e) => setFormState({ ...formState, graduationYear: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-white/10 text-white focus:outline-none focus:border-brand-indigo"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:border-slate-400"
                   >
                     <option value="2025">2025 Passout</option>
                     <option value="2026">2026 Passout</option>
@@ -431,16 +433,16 @@ export default function Internships({ selectedInternship, setSelectedInternship,
 
               {/* Upload Resume Simulation */}
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Upload Resume (PDF / DOCX)</label>
-                <div className="p-4 rounded-xl bg-navy-950 border border-dashed border-white/20 text-center space-y-2">
-                  <FileText className="w-6 h-6 text-brand-cyan mx-auto" />
-                  <p className="text-[11px] text-slate-400">
+                <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Upload Resume (PDF / DOCX)</label>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-navy-950 border border-dashed border-slate-300 dark:border-white/20 text-center space-y-2">
+                  <FileText className="w-6 h-6 text-slate-700 dark:text-slate-300 mx-auto" />
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
                     {formState.resumeFileName || 'Drag and drop your resume file here or click to browse'}
                   </p>
                   <button
                     type="button"
                     onClick={() => setFormState({ ...formState, resumeFileName: 'Resume_Navyan_2026.pdf' })}
-                    className="px-3 py-1 rounded-lg bg-navy-850 text-brand-cyan font-semibold text-[11px] border border-white/10"
+                    className="px-3 py-1 rounded-lg bg-slate-200 dark:bg-navy-850 text-slate-900 dark:text-white font-semibold text-[11px] border border-slate-300 dark:border-white/10"
                   >
                     Select PDF File
                   </button>
@@ -448,20 +450,24 @@ export default function Internships({ selectedInternship, setSelectedInternship,
               </div>
 
               <div className="pt-2 flex items-center gap-3">
-                <button
+                <Button
+                  variant="secondary"
+                  size="md"
                   type="button"
                   onClick={() => setApplyModalOpen(false)}
-                  className="w-1/3 py-3 rounded-xl bg-navy-850 text-slate-300 font-bold"
+                  className="w-1/3"
                 >
                   Back
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
+                  size="md"
                   type="submit"
-                  className="w-2/3 gradient-btn py-3 rounded-xl text-white font-bold shadow-glow-indigo flex items-center justify-center gap-2"
+                  icon={CheckCircle2}
+                  className="w-2/3"
                 >
-                  <span>Submit Application</span>
-                  <CheckCircle2 className="w-4 h-4" />
-                </button>
+                  Submit Application
+                </Button>
               </div>
 
             </form>
