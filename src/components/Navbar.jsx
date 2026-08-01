@@ -49,7 +49,7 @@ export default function Navbar({
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-navy-950/80 backdrop-blur-xl border-b border-white/10 shadow-2xl py-3' 
+          ? 'bg-white/85 dark:bg-navy-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 shadow-lg py-3' 
           : 'bg-transparent py-5'
       }`}
     >
@@ -62,23 +62,23 @@ export default function Navbar({
             className="flex items-center gap-3 group focus:outline-none"
           >
             <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-indigo via-brand-blue to-brand-cyan p-0.5 shadow-glow-indigo transition-transform group-hover:scale-105">
-              <div className="w-full h-full bg-navy-950 rounded-[10px] flex items-center justify-center">
+              <div className="w-full h-full bg-slate-900 dark:bg-navy-950 rounded-[10px] flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-brand-cyan animate-pulse" />
               </div>
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-xl font-bold tracking-tight text-white flex items-center gap-1">
+              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
                 NAVYAN
                 <span className="w-2 h-2 rounded-full bg-brand-cyan animate-ping inline-block" />
               </span>
-              <span className="text-[10px] font-medium tracking-widest text-slate-400 uppercase -mt-1">
+              <span className="text-[10px] font-medium tracking-widest text-slate-500 dark:text-slate-400 uppercase -mt-1">
                 Tech & Internships
               </span>
             </div>
           </button>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-navy-900/60 p-1.5 rounded-full border border-white/10 backdrop-blur-md">
+          <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 dark:bg-navy-900/60 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -88,15 +88,15 @@ export default function Navbar({
                   onClick={() => setActiveTab(item.id)}
                   className={`relative px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 flex items-center gap-2 ${
                     isActive
-                      ? 'text-white bg-gradient-to-r from-brand-indigo to-brand-blue shadow-md'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      ? 'text-white bg-gradient-to-r from-brand-indigo to-brand-blue shadow-md scale-105'
+                      : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-brand-indigo dark:text-slate-400'}`} />
                   {item.label}
                   {item.badge && (
                     <span className={`text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider font-bold ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-brand-indigo/30 text-brand-cyan border border-brand-indigo/40'
+                      isActive ? 'bg-white/20 text-white' : 'bg-brand-indigo/10 dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-cyan border border-brand-indigo/30'
                     }`}>
                       {item.badge}
                     </span>
@@ -111,35 +111,40 @@ export default function Navbar({
             {/* Quick Spotlight Search */}
             <button
               onClick={onOpenSearch}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-900/80 border border-white/10 text-slate-400 hover:text-white hover:border-brand-indigo/50 transition-all text-xs"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-brand-indigo/50 transition-all text-xs"
               title="Search internships, courses & services"
             >
-              <Search className="w-3.5 h-3.5 text-brand-cyan" />
+              <Search className="w-3.5 h-3.5 text-brand-indigo dark:text-brand-cyan" />
               <span>Search...</span>
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-navy-800 text-slate-400 rounded border border-white/10">
+              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-white dark:bg-navy-800 text-slate-500 dark:text-slate-400 rounded border border-slate-200 dark:border-white/10">
                 ⌘K
               </kbd>
             </button>
 
-            {/* Theme Switcher Toggle */}
+            {/* Theme Switcher Toggle Button */}
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2.5 rounded-xl bg-navy-900/80 border border-white/10 text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+              className="p-2.5 rounded-xl bg-slate-100 dark:bg-navy-900/80 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5 transition-all shadow-sm"
               aria-label="Toggle Theme"
+              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-300" />}
+              {isDarkMode ? (
+                <Sun className="w-4 h-4 text-amber-400 animate-spin-slow" />
+              ) : (
+                <Moon className="w-4 h-4 text-brand-indigo" />
+              )}
             </button>
 
-            {/* Dashboard or Auth Button */}
+            {/* Dashboard Link */}
             <button
               onClick={() => setActiveTab('dashboard')}
               className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 ${
                 activeTab === 'dashboard'
                   ? 'bg-brand-indigo text-white shadow-glow-indigo border border-indigo-400/30'
-                  : 'bg-navy-850 hover:bg-navy-800 text-slate-200 border border-white/10'
+                  : 'bg-slate-100 dark:bg-navy-850 hover:bg-slate-200 dark:hover:bg-navy-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10'
               }`}
             >
-              <LayoutDashboard className="w-4 h-4 text-brand-cyan" />
+              <LayoutDashboard className="w-4 h-4 text-brand-indigo dark:text-brand-cyan" />
               <span>Dashboard</span>
             </button>
 
@@ -156,14 +161,22 @@ export default function Navbar({
           {/* Mobile Menu Toggle Button */}
           <div className="flex lg:hidden items-center gap-2">
             <button
-              onClick={onOpenSearch}
-              className="p-2 rounded-lg bg-navy-900 border border-white/10 text-slate-300"
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="p-2 rounded-lg bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300"
+              aria-label="Toggle Theme"
             >
-              <Search className="w-4 h-4 text-brand-cyan" />
+              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-brand-indigo" />}
+            </button>
+
+            <button
+              onClick={onOpenSearch}
+              className="p-2 rounded-lg bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300"
+            >
+              <Search className="w-4 h-4 text-brand-indigo dark:text-brand-cyan" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-navy-900 border border-white/10 text-slate-300 hover:text-white"
+              className="p-2 rounded-lg bg-slate-100 dark:bg-navy-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -173,7 +186,7 @@ export default function Navbar({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-navy-950/95 border-b border-white/10 backdrop-blur-2xl px-4 pt-3 pb-6 space-y-2 mt-3 animate-fadeIn">
+        <div className="lg:hidden bg-white/95 dark:bg-navy-950/95 border-b border-slate-200 dark:border-white/10 backdrop-blur-2xl px-4 pt-3 pb-6 space-y-2 mt-3 animate-fadeIn">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -187,11 +200,11 @@ export default function Navbar({
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                   isActive 
                     ? 'bg-gradient-to-r from-brand-indigo to-brand-blue text-white shadow-md' 
-                    : 'text-slate-300 hover:bg-white/5'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className="w-4 h-4 text-brand-cyan" />
+                  <Icon className="w-4 h-4 text-brand-indigo dark:text-brand-cyan" />
                   <span>{item.label}</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -199,15 +212,15 @@ export default function Navbar({
             );
           })}
 
-          <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex flex-col gap-2">
             <button
               onClick={() => {
                 setActiveTab('dashboard');
                 setMobileMenuOpen(false);
               }}
-              className="w-full py-3 rounded-xl bg-navy-850 text-white font-semibold text-sm flex items-center justify-center gap-2 border border-white/10"
+              className="w-full py-3 rounded-xl bg-slate-100 dark:bg-navy-850 text-slate-900 dark:text-white font-semibold text-sm flex items-center justify-center gap-2 border border-slate-200 dark:border-white/10"
             >
-              <LayoutDashboard className="w-4 h-4 text-brand-cyan" />
+              <LayoutDashboard className="w-4 h-4 text-brand-indigo dark:text-brand-cyan" />
               Student Dashboard
             </button>
             <button

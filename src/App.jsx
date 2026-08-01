@@ -11,21 +11,35 @@ import Dashboard from './components/Dashboard';
 import AuthModal from './components/AuthModal';
 import SearchModal from './components/SearchModal';
 import Toast from './components/Toast';
+import CursorGlow from './components/CursorGlow';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [selectedInternship, setSelectedInternship] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  
+  // Theme state with localStorage persistence
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('navyan_theme');
+    return savedTheme ? savedTheme === 'dark' : true;
+  });
+
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Handle Theme Toggle
+  // Handle Dark / Light Theme Toggle
   useEffect(() => {
+    const root = document.documentElement;
     if (isDarkMode) {
-      document.documentElement.classList.add('dark');
+      root.classList.add('dark');
+      root.classList.remove('light');
+      root.setAttribute('data-theme', 'dark');
+      localStorage.setItem('navyan_theme', 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.remove('dark');
+      root.classList.add('light');
+      root.setAttribute('data-theme', 'light');
+      localStorage.setItem('navyan_theme', 'light');
     }
   }, [isDarkMode]);
 
@@ -42,9 +56,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-navy-950 text-slate-100 font-sans selection:bg-brand-indigo selection:text-white flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-50 dark:bg-navy-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-indigo selection:text-white flex flex-col justify-between transition-colors duration-300 relative">
       
-      {/* Navigation Header */}
+      {/* Global Interactive Cursor Spotlight Follower */}
+      <CursorGlow />
+
+      {/* Sticky Header Navbar */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -54,8 +71,8 @@ export default function App() {
         setIsDarkMode={setIsDarkMode}
       />
 
-      {/* Main View Router */}
-      <main className="flex-grow">
+      {/* Main Content Router */}
+      <main className="flex-grow relative z-10">
         {activeTab === 'home' && (
           <Home
             setActiveTab={setActiveTab}
@@ -104,13 +121,13 @@ export default function App() {
         )}
       </main>
 
-      {/* Global Footer */}
+      {/* Footer */}
       <Footer
         setActiveTab={setActiveTab}
         onOpenAuth={() => setIsAuthOpen(true)}
       />
 
-      {/* Modals & Toasts */}
+      {/* Modals & Toast Feedback */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
