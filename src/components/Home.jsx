@@ -283,7 +283,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
     <div className="space-y-16 md:space-y-24 pb-20 overflow-x-hidden bg-slate-50 dark:bg-navy-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       
       {/* HERO SECTION — overflow:hidden kept for background blobs only */}
-      <section className="relative min-h-[75vh] sm:min-h-[85vh] pt-28 sm:pt-32 pb-10 sm:pb-20 flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[70vh] sm:min-h-[85vh] pt-28 sm:pt-32 pb-6 sm:pb-16 flex items-center justify-center overflow-hidden">
         
         {/* Background SVG Blob with Soft Opacity */}
         <img
@@ -404,16 +404,10 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
         </div>
       </section>
 
-      {/* IMPACT STATS — SEPARATE SECTION outside hero overflow:hidden */}
-      {/* Previously inside hero, the overflow:hidden clipped animating cards causing ghost stack */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3"
-        >
+      {/* IMPACT STATS — No enter animation to prevent ghost/bleed glitch.
+          Counter spring handles the visual interest. Section has solid bg. */}
+      <section className="bg-slate-50 dark:bg-navy-950 px-4 sm:px-6 lg:px-8 pb-2">
+        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { label: 'Interns Trained & Placed', numeric: '15000', suffix: '+', icon: Users },
             { label: 'PPO Placement Rate', numeric: '98.4', decimals: 1, suffix: '%', icon: TrendingUp },
@@ -424,7 +418,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             return (
               <div
                 key={idx}
-                className="p-4 rounded-2xl text-center bg-white dark:bg-navy-900 border border-slate-200/80 dark:border-white/10 shadow-sm min-w-0"
+                className="p-4 rounded-2xl text-center bg-white dark:bg-navy-900 border border-slate-200 dark:border-white/10 shadow-sm"
               >
                 <div className="flex justify-center mb-2">
                   <Icon className="w-4 h-4 text-slate-600 dark:text-slate-300" />
@@ -443,7 +437,7 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
               </div>
             );
           })}
-        </motion.div>
+        </div>
       </section>
 
       {/* DUAL INFINITE MARQUEE TRACKS: TRACK 1 TECH STACK & TRACK 2 REVERSE HIRING COMPANIES */}
