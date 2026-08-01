@@ -280,10 +280,10 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
   };
 
   return (
-    <div className="space-y-24 pb-20 overflow-x-hidden bg-slate-50 dark:bg-navy-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div className="space-y-16 md:space-y-24 pb-20 overflow-x-hidden bg-slate-50 dark:bg-navy-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
       
-      {/* HERO SECTION */}
-      <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden">
+      {/* HERO SECTION — overflow:hidden kept for background blobs only */}
+      <section className="relative min-h-[75vh] sm:min-h-[85vh] pt-28 sm:pt-32 pb-10 sm:pb-20 flex items-center justify-center overflow-hidden">
         
         {/* Background SVG Blob with Soft Opacity */}
         <img
@@ -401,46 +401,49 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             </Button>
           </motion.div>
 
-          {/* IMPACT STATS WITH NUMBER COUNT-UP */}
-          <motion.div 
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto"
-          >
-            {[
-              { label: 'Interns Trained & Placed', numeric: '15000', suffix: '+', icon: Users },
-              { label: 'PPO Placement Rate', numeric: '98.4', decimals: 1, suffix: '%', icon: TrendingUp },
-              { label: 'IT Projects Delivered', numeric: '450', suffix: '+', icon: Code2 },
-              { label: 'Highest Package', numeric: '22.5', decimals: 1, prefix: '₹', suffix: ' LPA', icon: Award },
-            ].map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <div 
-                  key={idx}
-                  className="p-4 rounded-2xl text-center bg-white/90 dark:bg-navy-900/60 border border-slate-200/80 dark:border-white/10 shadow-sm min-w-0"
-                >
-                  <div className="flex justify-center mb-2">
-                    <Icon className="w-4 h-4 text-slate-700 dark:text-slate-300" />
-                  </div>
-                  <div className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-none">
-                    <Counter
-                      value={stat.numeric}
-                      decimals={stat.decimals || 0}
-                      prefix={stat.prefix || ''}
-                      suffix={stat.suffix || ''}
-                    />
-                  </div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-1.5 leading-tight">
-                    {stat.label}
-                  </div>
-                </div>
-              );
-            })}
-          </motion.div>
-
         </div>
+      </section>
+
+      {/* IMPACT STATS — SEPARATE SECTION outside hero overflow:hidden */}
+      {/* Previously inside hero, the overflow:hidden clipped animating cards causing ghost stack */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-3"
+        >
+          {[
+            { label: 'Interns Trained & Placed', numeric: '15000', suffix: '+', icon: Users },
+            { label: 'PPO Placement Rate', numeric: '98.4', decimals: 1, suffix: '%', icon: TrendingUp },
+            { label: 'IT Projects Delivered', numeric: '450', suffix: '+', icon: Code2 },
+            { label: 'Highest Package', numeric: '22.5', decimals: 1, prefix: '₹', suffix: ' LPA', icon: Award },
+          ].map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={idx}
+                className="p-4 rounded-2xl text-center bg-white dark:bg-navy-900 border border-slate-200/80 dark:border-white/10 shadow-sm min-w-0"
+              >
+                <div className="flex justify-center mb-2">
+                  <Icon className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+                </div>
+                <div className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-none">
+                  <Counter
+                    value={stat.numeric}
+                    decimals={stat.decimals || 0}
+                    prefix={stat.prefix || ''}
+                    suffix={stat.suffix || ''}
+                  />
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-1.5 leading-tight">
+                  {stat.label}
+                </div>
+              </div>
+            );
+          })}
+        </motion.div>
       </section>
 
       {/* DUAL INFINITE MARQUEE TRACKS: TRACK 1 TECH STACK & TRACK 2 REVERSE HIRING COMPANIES */}
