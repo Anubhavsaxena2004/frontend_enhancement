@@ -56,20 +56,22 @@ export default function Navbar({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Brand Logo */}
+          {/* Brand Logo — uses /logo.svg from public/ */}
           <button 
             onClick={() => setActiveTab('home')}
             className="flex items-center gap-3 group focus:outline-none"
           >
-            <div className="w-9 h-9 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-900 shadow-sm transition-transform group-hover:scale-105">
-              <Sparkles className="w-5 h-5" />
-            </div>
+            <img
+              src="/logo.svg"
+              alt="Navyan Logo"
+              className="w-9 h-9 rounded-xl shadow-sm transition-transform group-hover:scale-105 object-contain"
+            />
             <div className="flex flex-col text-left">
               <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
                 NAVYAN
               </span>
               <span className="text-[10px] font-semibold tracking-widest text-slate-500 dark:text-slate-400 uppercase -mt-1">
-                Tech & Internships
+                Tech &amp; Internships
               </span>
             </div>
           </button>

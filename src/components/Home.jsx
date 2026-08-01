@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/Button';
 import Counter from './ui/Counter';
 import Marquee from './ui/Marquee';
@@ -16,6 +16,7 @@ import {
   ShieldCheck, 
   Zap, 
   ChevronRight,
+  ChevronDown,
   Star,
   FileCheck2,
   Building2,
@@ -27,7 +28,9 @@ import {
   Database,
   Globe,
   Flame,
-  Cloud
+  Cloud,
+  HelpCircle,
+  MessageCircle
 } from 'lucide-react';
 import { MOCK_INTERNSHIPS, MOCK_TESTIMONIALS, MOCK_SERVICES } from '../data/mockData';
 
@@ -131,6 +134,109 @@ function BentoCard({ children, className = '', icon: Icon, title, subtitle, tag,
         {children}
       </div>
     </motion.div>
+  );
+}
+
+// ============================================================
+// FAQ DATA & ACCORDION COMPONENT
+// ============================================================
+const FAQ_ITEMS = [
+  {
+    q: 'What is Navyan and who is it for?',
+    a: 'Navyan is a premium IT internship & services platform designed for engineering students (1st–4th year), recent graduates, and fast-growing businesses. Students get hands-on production internships with guaranteed stipends; businesses get enterprise-grade web, mobile, and AI engineering solutions.',
+  },
+  {
+    q: 'Are the internship stipends really guaranteed?',
+    a: 'Yes — every Navyan internship comes with a contractual stipend ranging from ₹10,000 to ₹25,000/month depending on the domain and complexity. The offer letter is issued on Day 1 before any work begins, and stipends are credited on a fixed monthly date.',
+  },
+  {
+    q: 'What is a PPO (Pre-Placement Offer) and how do I get one?',
+    a: 'A PPO is a full-time job offer given to you before your internship ends. At Navyan, top 30% of interns — evaluated on project impact, code quality, and mentorship reviews — receive PPO packages ranging up to ₹22.5 LPA. It\'s entirely merit-based with no referrals needed.',
+  },
+  {
+    q: 'How are the internship certificates verified?',
+    a: 'Every certificate and offer letter issued by Navyan has a unique cryptographic verification hash (e.g. NAV-2026-8941) and a QR code. Employers, universities, and LinkedIn can instantly verify authenticity on our Verify page — tamper-proof and ISO-certified.',
+  },
+  {
+    q: 'Do I need prior experience to apply for an internship?',
+    a: 'Not at all. We accept students from all years. For beginner-friendly tracks like UI/UX and Full Stack, only a basic understanding of HTML/CSS or Python is required. For AI & DevOps tracks, some project-level experience helps. Our mentors guide you from Day 1.',
+  },
+  {
+    q: 'How long are the internships and can I do them remotely?',
+    a: 'Internship durations range from 3 to 6 months. All internships are fully remote-first with flexible working hours (4–6 hrs/day). We use async-first collaboration tools (Notion, Slack, GitHub) so you can balance internship alongside your college schedule.',
+  },
+  {
+    q: 'What kind of IT services does Navyan offer to businesses?',
+    a: 'We architect and build full-stack web platforms, mobile apps (React Native / Flutter), custom AI models (fine-tuned LLMs, computer vision), and cloud/DevOps infrastructure on AWS & GCP. Use the live cost estimator on our Services page for an instant quote.',
+  },
+  {
+    q: 'Can I enroll in courses without doing an internship?',
+    a: 'Absolutely. Our Navyan Academy courses are standalone and open to everyone. Each bootcamp includes recorded video lectures, live Q&A sessions, project assignments, and a verified completion certificate. A one-time enrollment fee applies with optional EMI.',
+  },
+];
+
+function FAQAccordion() {
+  const [openIndex, setOpenIndex] = useState(null);
+
+  return (
+    <div className="space-y-3">
+      {FAQ_ITEMS.map((item, idx) => {
+        const isOpen = openIndex === idx;
+        return (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.35, ease: 'easeOut', delay: Math.min(idx * 0.05, 0.25) }}
+            className={`rounded-2xl border transition-colors duration-200 overflow-hidden ${
+              isOpen
+                ? 'border-brand-indigo/40 bg-white dark:bg-navy-900/80 shadow-md'
+                : 'border-slate-200/80 dark:border-white/10 bg-white/70 dark:bg-navy-900/50'
+            }`}
+          >
+            {/* Question Row */}
+            <button
+              onClick={() => setOpenIndex(isOpen ? null : idx)}
+              className="w-full flex items-center justify-between px-6 py-5 text-left group"
+            >
+              <span className={`text-sm font-semibold pr-4 leading-snug transition-colors ${
+                isOpen ? 'text-brand-indigo dark:text-brand-cyan' : 'text-slate-900 dark:text-white group-hover:text-brand-indigo dark:group-hover:text-brand-cyan'
+              }`}>
+                {item.q}
+              </span>
+              <motion.div
+                animate={{ rotate: isOpen ? 180 : 0 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                  isOpen ? 'bg-brand-indigo/10 text-brand-indigo dark:text-brand-cyan' : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400'
+                }`}
+              >
+                <ChevronDown className="w-4 h-4" />
+              </motion.div>
+            </button>
+
+            {/* Answer — AnimatePresence for smooth mount/unmount */}
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div
+                  key="answer"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.28, ease: [0.21, 0.47, 0.32, 0.98] }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-6 pb-5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-white/5 pt-4">
+                    {item.a}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -670,6 +776,53 @@ export default function Home({ setActiveTab, onSelectInternship, onOpenAuth }) {
             </motion.div>
           ))}
         </div>
+      </section>
+
+      {/* =========================================================== */}
+      {/* FAQ SECTION */}
+      {/* =========================================================== */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.45 }}
+          className="text-center max-w-2xl mx-auto mb-12"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-navy-900/90 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-white/10 shadow-sm mb-4">
+            <HelpCircle className="w-3.5 h-3.5 text-brand-indigo" />
+            <span>Frequently Asked Questions</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+            Got Questions? We've Got Answers.
+          </h2>
+          <p className="mt-3 text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+            Everything you need to know about Navyan internships, certifications, and IT services.
+          </p>
+        </motion.div>
+
+        <FAQAccordion />
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="mt-10 text-center p-6 rounded-2xl bg-white/80 dark:bg-navy-900/60 border border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <div className="flex items-center gap-3 text-left">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center shrink-0">
+              <MessageCircle className="w-5 h-5 text-white dark:text-slate-900" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-slate-900 dark:text-white">Still have questions?</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Our team responds within 2 hours on business days.</p>
+            </div>
+          </div>
+          <Button variant="primary" size="sm" icon={ArrowRight} onClick={onOpenAuth}>
+            Contact Support
+          </Button>
+        </motion.div>
       </section>
 
       {/* ADAPTIVE WAVE DIVIDER: NO BLACK CRACKS IN LIGHT MODE */}
