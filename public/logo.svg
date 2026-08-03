@@ -1,16 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" fill="none">
   <defs>
-    <linearGradient id="navyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#6366F1" />
-      <stop offset="50%" stop-color="#3B82F6" />
-      <stop offset="100%" stop-color="#06B6D4" />
+    <linearGradient id="navBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="60%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1D4ED8" />
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="4" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    <linearGradient id="goldDot" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#EAB308" />
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#1E3A8A" flood-opacity="0.15"/>
     </filter>
   </defs>
-  <rect width="100" height="100" rx="24" fill="#0A0F1D"/>
-  <path d="M28 72V28L52 54V28H72V72L48 46V72H28Z" fill="url(#navyanGrad)" filter="url(#glow)"/>
-  <circle cx="72" cy="28" r="5" fill="#06B6D4" />
+  
+  <g filter="url(#softShadow)">
+    <!-- Main N shape path -->
+    <path d="M 120 440 
+             C 95 440 80 420 80 395 
+             L 80 145 
+             C 80 120 95 100 120 100 
+             C 140 100 155 112 170 135 
+             L 285 305 
+             L 285 200 
+             C 285 180 300 170 320 170 
+             C 340 170 355 185 355 205 
+             L 355 395 
+             C 355 420 340 440 315 440 
+             C 295 440 280 428 265 405 
+             L 150 235 
+             L 150 395 
+             C 150 420 135 440 120 440 Z" 
+          fill="url(#navBlue)" />
+    
+    <!-- Top Right Accent Dot -->
+    <circle cx="328" cy="115" r="36" fill="url(#goldDot)" stroke="#D97706" stroke-width="2" />
+  </g>
 </svg>
