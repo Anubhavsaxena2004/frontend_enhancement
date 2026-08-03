@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Sparkles, 
-  Search, 
-  User, 
-  ShieldCheck, 
-  Sun, 
-  Moon, 
-  Menu, 
-  X, 
+import {
+  Sparkles,
+  Search,
+  User,
+  ShieldCheck,
+  Sun,
+  Moon,
+  Menu,
+  X,
   ChevronRight,
   Briefcase,
   GraduationCap,
@@ -17,13 +17,13 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/Button';
 
-export default function Navbar({ 
-  activeTab, 
-  setActiveTab, 
-  onOpenSearch, 
-  onOpenAuth, 
-  isDarkMode, 
-  setIsDarkMode 
+export default function Navbar({
+  activeTab,
+  setActiveTab,
+  onOpenSearch,
+  onOpenAuth,
+  isDarkMode,
+  setIsDarkMode
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,23 +46,22 @@ export default function Navbar({
   ];
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/85 dark:bg-navy-950/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 shadow-sm py-3' 
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'bg-white/85 dark:bg-navy-950/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 shadow-sm py-3'
           : 'bg-transparent py-5'
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          
+
           {/* Brand Logo — uses /logo.svg from public/ */}
-          <button 
+          <button
             onClick={() => setActiveTab('home')}
             className="flex items-center gap-3 group focus:outline-none"
           >
             <img
-              src="/logo.svg"
+              src="/favicon.png"
               alt="Navyan Logo"
               className="w-9 h-9 rounded-xl shadow-sm transition-transform group-hover:scale-105 object-contain"
             />
@@ -85,11 +84,10 @@ export default function Navbar({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`relative py-1 text-xs font-semibold transition-all duration-200 flex items-center gap-2 ${
-                    isActive
+                  className={`relative py-1 text-xs font-semibold transition-all duration-200 flex items-center gap-2 ${isActive
                       ? 'text-slate-900 dark:text-white font-bold'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
+                    }`}
                 >
                   <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-brand-indigo dark:text-brand-cyan' : 'text-slate-400'}`} />
                   {item.label}
@@ -103,7 +101,7 @@ export default function Navbar({
 
           {/* 3 Utility Actions on Right: 1) Command Palette, 2) Theme Switcher, 3) Portal Login */}
           <div className="hidden lg:flex items-center gap-3">
-            
+
             {/* 1) Command Palette / Search Trigger */}
             <button
               onClick={onOpenSearch}
@@ -181,11 +179,10 @@ export default function Navbar({
                   setActiveTab(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                  isActive 
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold shadow-sm' 
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold shadow-sm'
                     : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon className="w-4 h-4" />
